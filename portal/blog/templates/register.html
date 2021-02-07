@@ -10,7 +10,7 @@
                     {% if form.ip.errors %}
                         {{form.ip(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback" >
-                            {%for error in form.username.errors%}
+                            {%for error in form.ip.errors%}
                                 <span>{{error}}</span>
                             {% endfor %}
                         </div>
@@ -19,12 +19,27 @@
                         {% endif %}
                     
                 </div>
+
+                <div class="form-group">
+                    {{form.port.label(class="form-control-label")}}
+                    {% if form.port.errors %}
+                        {{form.port(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.port.errors %}
+                            <span>{{error}}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                      {{form.port(class="form-control form-control-lg")}}
+                    {% endif %}
+                </div>
+
                 <div class="form-group">
                     {{form.region.label(class="form-control-label")}}
                     {% if form.region.errors %}
                         {{form.region(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
+                            {% for error in form.region.errors %}
                             <span>{{error}}</span>
                             {% endfor %}
                         </div>
@@ -32,6 +47,8 @@
                       {{form.region(class="form-control form-control-lg")}}
                     {% endif %}
                 </div>
+
+                
                 
             </fieldset>
             <div class="form-group">

@@ -14,30 +14,46 @@ from blog.camera_opencv import Camera
 def register():
     form=Registration()
     if form.validate_on_submit():
-        camera=CameraDb(ip=form.ip.data,region=form.region.data)
+        camera=CameraDb(ip=form.ip.data,region=form.region.data,port=form.port.data)
         db.session.add(camera)
         db.session.commit()
         flash(f'Account created for {form.ip.data}!', 'success')
         return redirect(url_for('register'))
     return render_template('register.html',title='Register',form=form,values=CameraDb.query.all())
 
-@app.route('/camera')
+@app.route('/camera',methods=['GET'])
 def getCamera():
-    return render_template('camera.html',title='Camera')
+    ipAdd=request.args.get('ipAdd')
+    region=request.args.get('region')
+    port=request.args.get('port')
+   
+    return render_template('camera.html',title='Camera',ipAdd=ipAdd,region=region,port=port)
 
 def gen(camera):
     """Video streaming generator function."""
+    
     while True:
         frame = camera.get_frame()
+       
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 
-@app.route('/sendFrame')
+@app.route('/sendFrame',methods=['GET','POST'])
 def sendFrame():
     # get the data and send success if inserted successfully in db else send error
-    return 'success'
+    if request.method=='GET':
+        cam=CameraDb.query.filter(CameraDb.ip==request.args.get('ip') and CameraDb.region==request.args.get('region')).one()
+        cam.x1=request.args.get('x1')
+        cam.y1=request.args.get('y1')
+        cam.x2=request.args.get('x2')
+        cam.y2=request.args.get('y2')
+        print(cam)
+        db.session.commit()
+        return 'success'
+       
+    return 'error'
 
 
 @app.route('/setCount',methods=['POST'])
@@ -62,8 +78,13 @@ def getIp():
     print('now outside')
     return str(strm)
 
-@app.route('/videoFeed')
+@app.route('/videoFeed',methods=['GET'])
 def video_feed():
 
-    return Response(gen(Camera()),
+    ip=request.args.get('ipAdd')
+    port=request.args.get('port')
+    print(ip)
+    print(port)
+
+    return Response(gen(Camera(ip,port)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')

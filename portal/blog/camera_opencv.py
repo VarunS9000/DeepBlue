@@ -3,11 +3,15 @@ import cv2
 from blog.base_camera import BaseCamera
 import numpy as np
 import requests
+from flask import request
 
 class Camera(BaseCamera):
     video_source = 0
+   
 
-    def __init__(self):
+    def __init__(self,ip,port):
+        self.ip=ip
+        self.port=port
         if os.environ.get('OPENCV_CAMERA_SOURCE'):
             Camera.set_video_source(int(os.environ['OPENCV_CAMERA_SOURCE']))
         super(Camera, self).__init__()
@@ -16,24 +20,27 @@ class Camera(BaseCamera):
     def set_video_source(source):
         Camera.video_source = source
 
+   
+
 
 
 
 
 
     @staticmethod
-    def frames():
+    def frames(ip,port):
+        print('Frame Cam',ip)
+        print('Frame Port',port)
         try:
             '''postUrl = 'http://127.0.0.1:5000/getIp'
             res = requests.post(postUrl,data={'hello':'hello'})
             print(res.text)
             ip_list = str(res.text).split(' ')
-
             for ip in ip_list:
                 url = 'http://' + str(ip) + "/shot.jpg"'''
 
 
-            url = 'http://192.168.43.1:8080/shot.jpg'
+            url = 'http://'+ip+':'+port+'/shot.jpg'
             while True:
                 print('inside while')
                 img_req = requests.get(url)

@@ -7,6 +7,7 @@ from blog.models import CameraDb
 
 class Registration(FlaskForm):
     ip=StringField('IP Address',validators=[DataRequired(),IPAddress(message="Should be ip!")])
+    port=StringField('Port Number',validators=[DataRequired()])
     region=StringField('Region',validators=[DataRequired()])
     submit=SubmitField('Sign Up')
     
