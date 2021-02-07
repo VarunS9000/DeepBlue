@@ -10,20 +10,19 @@
     <h1>Camera View</h1>
     <br>
 
-    <img id="img" onclick="cords();" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}">
+    <img id="img" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}">
     <script type="text/javascript">
       var coords = []
       var img = document.getElementById('img');
       img.addEventListener('click',(event)=>{
-        coords.push(event.clientX)
-        coords.push(event.clientY)
+        coords.push(event.clientX);
+        coords.push(event.clientY);
         console.log('coords: ',coords);
         if(coords.length == 4) {
           alert(coords)
           $.ajax({
             url: "{{url_for('sendFrame')}}",
             type: 'GET',
-            contentType:'application/json;charset=UTF-8',
             data: {
               x1:coords[0],
               y1:coords[1],
@@ -33,7 +32,8 @@
               region:'{{region}}'
             },
             success: function() {
-              window.location = window.location.toString().split('/')[0];
+              alert('success')
+              //window.location = window.location.toString().split('/')[0];
               coords = []
             }
           });

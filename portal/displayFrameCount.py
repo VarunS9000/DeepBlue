@@ -16,7 +16,7 @@ options = {
     'gpu': 1.0
 }
 
-
+print('options: ',options)
 try :
     tfnet = TFNet(options)
     colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
