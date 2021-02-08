@@ -63,10 +63,11 @@ def getCount():
             for result in results:
                 if result['label'] == 'person':
                     count += 1
-                     cam=CameraDb.query.filter(CameraDb.ip==listItem.ip and CameraDb.port==listItem.port).one()
-                     cam.count=count
-                     db.session.commit()
+                    
                     print('count: ',count)
+            cam=CameraDb.query.filter(CameraDb.ip==listItem.ip and CameraDb.port==listItem.port).one()
+            cam.count=count
+            db.session.commit()
             cap.release()
 
 

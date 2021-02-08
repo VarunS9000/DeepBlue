@@ -1,5 +1,6 @@
 import os
 import cv2
+from blog import db
 from blog.base_camera import BaseCamera
 from blog.models import CameraDb
 import numpy as np
@@ -79,9 +80,7 @@ class Camera(BaseCamera):
                         text = '{}: {:.0f}%'.format(label, confidence * 100)
                         frame = cv2.rectangle(frame, first, second, color, 3)
                         frame = cv2.putText(frame,text,first,cv2.FONT_HERSHEY_COMPLEX, 1,(0,0,0),2)
-                        cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
-                        cam.count=count
-                        db.session.commit()
+                        
 
 
                 print('count: ',count)
@@ -95,7 +94,9 @@ class Camera(BaseCamera):
                     
 
                 if time.time()-oldTime >= 10:
-                    #insert in db count
+                    cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
+                    cam.count=count
+                    db.session.commit()
                     oldTime = time.time()
 
         except:
