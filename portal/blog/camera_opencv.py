@@ -1,9 +1,10 @@
 import os
 import cv2
 from blog.base_camera import BaseCamera
+from blog.models import CameraDb
 import numpy as np
 import requests
-from flask import request
+from flask import url_for,redirect
 print(os.getcwd())
 from darkflow.net.build import TFNet
 import numpy as np
@@ -78,16 +79,20 @@ class Camera(BaseCamera):
                         text = '{}: {:.0f}%'.format(label, confidence * 100)
                         frame = cv2.rectangle(frame, first, second, color, 3)
                         frame = cv2.putText(frame,text,first,cv2.FONT_HERSHEY_COMPLEX, 1,(0,0,0),2)
+                        cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
+                        cam.count=count
+                        db.session.commit()
 
 
                 print('count: ',count)
                 yield cv2.imencode('.jpg',frame)[1].tobytes()
-                cv2.imshow('crowd counting',frame)
+                #cv2.imshow('crowd counting',frame)
                 #yield cv2.imencode('.jpg',frame)[1].tobytes()
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     #capture.release()
-                    cv2.destroyAllWindows()
-                    return
+                    BaseCamera.last_access=time.time()
+                    return redirect(url_for('register'))
+                    
 
                 if time.time()-oldTime >= 10:
                     #insert in db count
