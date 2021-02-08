@@ -1,6 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import requests
+from darkflow.net.build import TFNet
+import numpy as np
+import cv2
+import os
 
 
 app=Flask(__name__)
@@ -10,6 +15,5 @@ app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db'
 
 db=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
-
 
 from blog import routes

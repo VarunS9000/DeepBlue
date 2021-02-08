@@ -10,6 +10,7 @@ import numpy as np
 import requests
 import json
 import time
+#from blog.__init__ import tfnet
 class Camera(BaseCamera):
     video_source = 0
 
@@ -24,12 +25,6 @@ class Camera(BaseCamera):
     @staticmethod
     def set_video_source(source):
         Camera.video_source = source
-
-
-
-
-
-
 
 
     @staticmethod
@@ -54,9 +49,9 @@ class Camera(BaseCamera):
             'threshold': 0.5,
             'gpu': 1.0
         }
-
+        tfnet = TFNet(options)
         try:
-            tfnet = TFNet(options)
+
             colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
             oldTime = time.time()
             print('oldTime',oldTime)
@@ -92,7 +87,7 @@ class Camera(BaseCamera):
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     #capture.release()
                     cv2.destroyAllWindows()
-                    break
+                    return
 
                 if time.time()-oldTime >= 10:
                     #insert in db count

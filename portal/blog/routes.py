@@ -9,6 +9,7 @@ from blog.camera_opencv import Camera
 import requests
 from darkflow.net.build import TFNet
 import numpy as np
+import cv2
 
 @app.route("/",methods=['GET','POST'])
 @app.route("/register",methods=['GET','POST'])
