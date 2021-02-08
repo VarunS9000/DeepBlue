@@ -34,7 +34,14 @@ class Camera(BaseCamera):
         print('Frame Cam',ip)
         print('Frame Port',port)
         url = 'http://'+ip+':'+port+'/shot.jpg'
+        cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
+        rect=[]
+        rect.append(cam.x1)
+        rect.append(cam.x2)
+        rect.append(cam.y1)
+        rect.append(cam.y2)
         url = str(url)
+       
         print('url: ',url)
         imgReq = requests.get(url)
         imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
@@ -62,7 +69,8 @@ class Camera(BaseCamera):
                 imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
                 frame = cv2.imdecode(imgArr,-1)
                 frame = cv2.resize(frame,(640,480))
-                #frame = frame[rect[1]:rect[3],rect[0]:rect[2]]
+                if(rect.count(0)!=4):
+                    frame = frame[rect[1]:rect[3],rect[0]:rect[2]]
 
                 results = tfnet.return_predict(frame)
                 print('got results')
@@ -94,7 +102,6 @@ class Camera(BaseCamera):
                     
 
                 if time.time()-oldTime >= 10:
-                    cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
                     cam.count=count
                     db.session.commit()
                     oldTime = time.time()
