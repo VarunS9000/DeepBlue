@@ -6,19 +6,59 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Document</title>
 </head>
+<style media="screen">
+  #img {
+    border: 3px dotted black;
+    float: left;
+  }
+</style>
 <body>
     <h1>Camera View</h1>
     <br>
-
+    <p id="coords"></p> ************************ <p id="canvasCoords"></p>
+    <br><br>
     <img id="img" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}">
+    <canvas id="canvas" width="300" height="300"></canvas>
     <script type="text/javascript">
       var coords = []
       var img = document.getElementById('img');
+      clicked = false
       img.addEventListener('click',(event)=>{
+        clicked = true
         coords.push(event.clientX);
         coords.push(event.clientY);
         console.log('coords: ',coords);
         if(coords.length == 4) {
+
+          var img = document.getElementById('img')
+          var canvas = document.getElementById('canvas')
+          canvas.setAttribute('id','canvas')
+          var ctx = canvas.getContext("2d");
+
+          canvas.width = img.width;
+
+          canvas.height = img.height;
+          var width = coords[2] - coords[0];
+          var height = coords[3] - coords[1];
+          console.log('canvas width: ',canvas.width);
+          console.log('canvas height: ',canvas.height);
+          ctx.drawImage(img, 0, 0,img.width,img.height,0,0,canvas.width,canvas.height);
+          var x = coords[0]+640
+          console.log('x: ',x);
+          console.log('y: ',y);
+          console.log('coords[1]',coords[1]);
+          console.log('width: ',width);
+          console.log('height: ',height);
+          ctx.beginPath();
+          ctx.lineWidth = "6";
+          ctx.strokeStyle = "red";
+          x = Number(coords[0]) - 8
+          y = Number(coords[1]) - 263
+          alert('x: '+x+'y: '+y)
+          ctx.rect(x,y,width,height);
+          ctx.stroke();
+          document.body.appendChild(canvas)
+
           alert(coords)
           $.ajax({
             url: "{{url_for('sendFrame')}}",
@@ -35,10 +75,42 @@
               alert('success')
               //window.location = window.location.toString().split('/')[0];
               coords = []
+            },
+            error: function() {
+              return;
             }
           });
         }
       })
+
+      var x = 0;
+      var y = 0;
+
+      $('img').mousemove(function(e) {
+        console.log('hahahah');
+        document.getElementById('coords').innerHTML = 'x = '+e.clientX + '<br>' +'y = '+e.clientY;
+        x = e.clientX;
+        y = e.clientY;
+      })
+
+      $('canvas').mousemove(function(e) {
+        console.log('hahahah');
+        document.getElementById('canvasCoords').innerHTML = 'x = '+e.clientX + '<br>' +'y = '+e.clientY;
+      })
+
+      if(coords.length == 2) {
+        alert('inside here')
+        $('img').mousemove(function(e) {
+          console.log('hahahah');
+          document.getElementById('coords').innerHTML = 'x = '+e.clientX + '<br>' +'y = '+e.clientY;
+        })
+      }
+
+
+
+
+
+
     </script>
 </body>
 </html>
