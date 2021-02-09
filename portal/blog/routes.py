@@ -1,6 +1,6 @@
 import secrets
 from flask import render_template,url_for,flash,redirect,request,jsonify,Response
-from blog import app,db,bcrypt
+from blog import app,db,bcrypt,socketio
 from blog.forms import Registration
 from blog.models import CameraDb
 from importlib import import_module
@@ -10,6 +10,16 @@ import requests
 from darkflow.net.build import TFNet
 import numpy as np
 import cv2
+from flask_socketio import send, emit
+
+
+@socketio.on('coords')
+def handle_json(json):
+    print('received json: ' + str(json))
+    print('simply coords: ',json)
+    emit('success',json)
+
+
 
 @app.route("/",methods=['GET','POST'])
 @app.route("/register",methods=['GET','POST'])
@@ -63,7 +73,7 @@ def getCount():
             for result in results:
                 if result['label'] == 'person':
                     count += 1
-                    
+
                     print('count: ',count)
             cam=CameraDb.query.filter(CameraDb.ip==listItem.ip and CameraDb.port==listItem.port).one()
             cam.count=count
@@ -97,11 +107,12 @@ def gen(camera):
 
 
 
-@app.route('/sendFrame',methods=['GET','POST'])
+@app.route('/sendFrame',methods=['GET'])
 def sendFrame():
     # get the data and send success if inserted successfully in db else send error
     if request.method=='GET':
         print('inside sendFrame')
+        print('***************************************************************************************************************************************************************************************************')
         cam=CameraDb.query.filter(CameraDb.ip==request.args.get('ip') and CameraDb.region==request.args.get('region')).one()
         cam.x1=request.args.get('x1')
         cam.y1=request.args.get('y1')
@@ -109,9 +120,8 @@ def sendFrame():
         cam.y2=request.args.get('y2')
         print(cam)
         db.session.commit()
-        return 'success'
 
-    return 'error'
+        return "success"
 
 
 @app.route('/setCount',methods=['POST'])

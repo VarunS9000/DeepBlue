@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"></script>
     <title>Document</title>
 </head>
 <style media="screen">
@@ -11,6 +13,36 @@
     border: 3px dotted black;
     float: left;
   }
+  /* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+                url('http://i.stack.imgur.com/FhHRx.gif')
+                50% 50%
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .modal {
+    overflow: hidden;
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
 </style>
 <body>
     <h1>Camera View</h1>
@@ -29,40 +61,14 @@
         coords.push(event.clientY);
         console.log('coords: ',coords);
         if(coords.length == 4) {
+          var src = document.getElementById('img').src
+          document.getElementById('img').src = ''
+          alert('coords'+coords)
+          console.log('before ajax..');
 
-          var img = document.getElementById('img')
-          var canvas = document.getElementById('canvas')
-          canvas.setAttribute('id','canvas')
-          var ctx = canvas.getContext("2d");
-
-          canvas.width = img.width;
-
-          canvas.height = img.height;
-          var width = coords[2] - coords[0];
-          var height = coords[3] - coords[1];
-          console.log('canvas width: ',canvas.width);
-          console.log('canvas height: ',canvas.height);
-          ctx.drawImage(img, 0, 0,img.width,img.height,0,0,canvas.width,canvas.height);
-          var x = coords[0]+640
-          console.log('x: ',x);
-          console.log('y: ',y);
-          console.log('coords[1]',coords[1]);
-          console.log('width: ',width);
-          console.log('height: ',height);
-          ctx.beginPath();
-          ctx.lineWidth = "6";
-          ctx.strokeStyle = "red";
-          x = Number(coords[0]) - 8
-          y = Number(coords[1]) - 263
-          alert('x: '+x+'y: '+y)
-          ctx.rect(x,y,width,height);
-          ctx.stroke();
-          document.body.appendChild(canvas)
-
-          alert(coords)
           $.ajax({
             url: "{{url_for('sendFrame')}}",
-            type: 'GET',
+            type: 'get',
             data: {
               x1:coords[0],
               y1:coords[1],
@@ -72,16 +78,47 @@
               region:'{{region}}'
             },
             success: function() {
-              alert('success')
-              //window.location = window.location.toString().split('/')[0];
+              alert('success');
               coords = []
-            },
-            error: function() {
-              return;
+              console.log('after ajax');
+
+
+              var img = document.getElementById('img')
+              var canvas = document.getElementById('canvas')
+              canvas.setAttribute('id','canvas')
+              var ctx = canvas.getContext("2d");
+
+              canvas.width = img.width;
+
+              canvas.height = img.height;
+              var width = coords[2] - coords[0];
+              var height = coords[3] - coords[1];
+              console.log('canvas width: ',canvas.width);
+              console.log('canvas height: ',canvas.height);
+              ctx.drawImage(img, 0, 0,img.width,img.height,0,0,canvas.width,canvas.height);
+              var x = coords[0]+640
+              console.log('x: ',x);
+              console.log('y: ',y);
+              console.log('coords[1]',coords[1]);
+              console.log('width: ',width);
+              console.log('height: ',height);
+              ctx.beginPath();
+              ctx.lineWidth = "6";
+              ctx.strokeStyle = "red";
+              x = Number(coords[0]) - 8
+              y = Number(coords[1]) - 263
+              alert('x: '+x+'y: '+y)
+              ctx.rect(x,y,width,height);
+              ctx.stroke();
+              document.body.appendChild(canvas)
             }
           });
+          $(document).ajaxStop(function() {
+            alert('done')
+            document.getElementById('img').src = src
+          });
         }
-      })
+      });
 
       var x = 0;
       var y = 0;
@@ -107,10 +144,16 @@
       }
 
 
+      $body = $("body");
 
+      $(document).on({
+          ajaxStart: function() { $body.addClass("loading");    },
+           ajaxStop: function() { $body.removeClass("loading"); }
+      });
 
 
 
     </script>
+    <div class="modal"><!-- Place at bottom of page --></div>
 </body>
 </html>

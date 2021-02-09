@@ -34,14 +34,8 @@ class Camera(BaseCamera):
         print('Frame Cam',ip)
         print('Frame Port',port)
         url = 'http://'+ip+':'+port+'/shot.jpg'
-        cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
-        rect=[]
-        rect.append(cam.x1)
-        rect.append(cam.x2)
-        rect.append(cam.y1)
-        rect.append(cam.y2)
         url = str(url)
-       
+        #print('rect: ',rect)
         print('url: ',url)
         imgReq = requests.get(url)
         imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
@@ -69,16 +63,26 @@ class Camera(BaseCamera):
                 imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
                 frame = cv2.imdecode(imgArr,-1)
                 frame = cv2.resize(frame,(640,480))
-                if(rect.count(0)!=4):
-                    frame = frame[rect[1]:rect[3],rect[0]:rect[2]]
+                cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
+                rect=[]
+                rect.append(cam.x1)
+                rect.append(cam.y1)
+                rect.append(cam.x2)
+                rect.append(cam.y2)
+                rect = [int(x) for x in rect]
+                #print('rect: ',rect)
+                if rect != [0,0,0,0]:
+                    #print('inside rect !=')
+                    frame = frame[rect[0]:rect[2],rect[1]:rect[3]]
 
+                #print('frame: ',frame)
                 results = tfnet.return_predict(frame)
-                print('got results')
+                #print('got results')
                 count = 0
                 for color,result in zip(colors,results) :
                     first = (result['topleft']['x'], result['topleft']['y'])
                     second = (result['bottomright']['x'],result['bottomright']['y'])
-                    print('result: ',result)
+                    #print('result: ',result)
                     label = result['label']
                     confidence = result['confidence']
 
@@ -88,18 +92,21 @@ class Camera(BaseCamera):
                         text = '{}: {:.0f}%'.format(label, confidence * 100)
                         frame = cv2.rectangle(frame, first, second, color, 3)
                         frame = cv2.putText(frame,text,first,cv2.FONT_HERSHEY_COMPLEX, 1,(0,0,0),2)
-                        
 
 
-                print('count: ',count)
+
+                #print('count: ',count)
                 yield cv2.imencode('.jpg',frame)[1].tobytes()
                 #cv2.imshow('crowd counting',frame)
                 #yield cv2.imencode('.jpg',frame)[1].tobytes()
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     #capture.release()
                     BaseCamera.last_access=time.time()
-                    return redirect(url_for('register'))
-                    
+                    #return redirect(url_for('register'))
+                    print('before break')
+                    #break
+                    return
+
 
                 if time.time()-oldTime >= 10:
                     cam.count=count
