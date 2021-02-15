@@ -5,13 +5,14 @@ from blog.base_camera import BaseCamera
 from blog.models import CameraDb
 import numpy as np
 import requests
-from flask import url_for,redirect
+from flask import url_for,redirect,session
 print(os.getcwd())
-from darkflow.net.build import TFNet
 import numpy as np
 import requests
 import json
 import time
+from blog.loading import Loading
+
 #from blog.__init__ import tfnet
 class Camera(BaseCamera):
     video_source = 0
@@ -44,15 +45,20 @@ class Camera(BaseCamera):
         print('frame: ',frame)
         #yield cv2.imencode('.jpg',frame)[1].tobytes()
         cv2.imshow('frame',frame)
-        path = os.path.join('D:\DeepBlue','bin\yolov2.weights')
-        os.chdir('D:\DeepBlue')
-        options = {
-            'model': 'D:\DeepBlue\cfg\yolo.cfg',
-            'load': path,
-            'threshold': 0.5,
-            'gpu': 1.0
-        }
-        tfnet = TFNet(options)
+        path = os.path.join('C:\DeepBlue','bin\yolov2.weights')
+        os.chdir('C:\DeepBlue')
+        #options = {
+            #'model': 'C:\DeepBlue\cfg\yolo.cfg',
+            #'load': path,
+            #'threshold': 0.5,
+            #'gpu': 1.0
+        #}
+       
+        #tfnet = TFNet(options)
+        tfnet=Loading.tfnet
+
+      
+       
         try:
 
             colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
@@ -70,14 +76,15 @@ class Camera(BaseCamera):
                 rect.append(cam.x2)
                 rect.append(cam.y2)
                 rect = [int(x) for x in rect]
-                #print('rect: ',rect)
+                print('rect: ',rect)
                 if rect != [0,0,0,0]:
                     #print('inside rect !=')
                     frame = frame[rect[0]:rect[2],rect[1]:rect[3]]
 
                 #print('frame: ',frame)
+                print('Before frame')
                 results = tfnet.return_predict(frame)
-                #print('got results')
+                print('got results')
                 count = 0
                 for color,result in zip(colors,results) :
                     first = (result['topleft']['x'], result['topleft']['y'])

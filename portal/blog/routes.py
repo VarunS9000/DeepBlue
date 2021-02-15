@@ -1,5 +1,5 @@
 import secrets
-from flask import render_template,url_for,flash,redirect,request,jsonify,Response
+from flask import render_template,url_for,flash,redirect,request,jsonify,Response,session
 from blog import app,db,bcrypt,socketio
 from blog.forms import Registration
 from blog.models import CameraDb
@@ -7,10 +7,10 @@ from importlib import import_module
 import os
 from blog.camera_opencv import Camera
 import requests
-from darkflow.net.build import TFNet
 import numpy as np
 import cv2
 from flask_socketio import send, emit
+from blog.loading import Loading
 
 
 @socketio.on('coords')
@@ -22,6 +22,9 @@ def handle_json(json):
 
 
 @app.route("/",methods=['GET','POST'])
+def loadVar():
+    Loading.tfnet=Loading.load()
+    return redirect(url_for('register'))
 @app.route("/register",methods=['GET','POST'])
 def register():
     form=Registration()
@@ -40,15 +43,8 @@ def getCount():
     camera = CameraDb.query.all()
 
     try:
-        path = os.path.join('D:\DeepBlue','bin\yolov2.weights')
-        os.chdir('D:\DeepBlue')
-        options = {
-            'model': 'D:\DeepBlue\cfg\yolo.cfg',
-            'load': path,
-            'threshold': 0.5,
-            'gpu': 1.0
-        }
-        tfnet = TFNet(options)
+        
+        tfnet = Loading.tfnet
         count = 0
         print('camera: ',camera)
         for listItem in camera:

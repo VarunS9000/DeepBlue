@@ -1,16 +1,16 @@
 import cv2
 import os
 import sys
-os.chdir('D:\DeepBlue')
+os.chdir('C:\DeepBlue')
 from darkflow.net.build import TFNet
 import numpy as np
 import requests
 import json
 
-path = os.path.join('D:\DeepBlue','bin\yolov2.weights')
+path = os.path.join('C:\DeepBlue','bin\yolov2.weights')
 
 options = {
-    'model': 'D:\DeepBlue\cfg\yolo.cfg',
+    'model': 'C:\DeepBlue\cfg\yolo.cfg',
     'load': path,
     'threshold': 0.5,
     'gpu': 1.0
@@ -20,7 +20,7 @@ print('options: ',options)
 try :
     tfnet = TFNet(options)
     colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
-    url = 'http://192.168.43.1:8080/shot.jpg'
+    url = 'http://192.168.1.22:8080/shot.jpg'
     #get the coods of the frame
     #rect = requests.post('/getCoords',data = {region: 'region'})
     while True:
