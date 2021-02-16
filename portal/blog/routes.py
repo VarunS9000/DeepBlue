@@ -11,6 +11,8 @@ import numpy as np
 import cv2
 from flask_socketio import send, emit
 from blog.loading import Loading
+import blog.count as cp
+import concurrent.futures
 
 
 @socketio.on('coords')
@@ -23,10 +25,11 @@ def handle_json(json):
 
 @app.route("/",methods=['GET','POST'])
 def loadVar():
-    Loading.tfnet=Loading.load()
+    Loading.setVar()
     return redirect(url_for('register'))
 @app.route("/register",methods=['GET','POST'])
 def register():
+    
     form=Registration()
     if form.validate_on_submit():
         camera=CameraDb(ip=form.ip.data,region=form.region.data,port=form.port.data)
@@ -38,49 +41,37 @@ def register():
 
 
 
-@app.route("/getCount",methods=['POST'])
+
+
+@app.route("/getCount",methods=['POST','GET'])
 def getCount():
+   
+
     camera = CameraDb.query.all()
 
-    try:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results=[executor.submit(cp.countPeople,x.ip,x.port) for x in camera]
+
+
+   
+    counts=[]
+    for f in concurrent.futures.as_completed(results):
+        counts.append(f.result())
+
+    print(sum(counts))
+
+    return str(sum(counts))
+
+    
+
+
         
-        tfnet = Loading.tfnet
-        count = 0
-        print('camera: ',camera)
-        for listItem in camera:
-            print('listItem.ip: ',listItem.ip)
-            print('port: ',listItem.port)
-            url = 'http://'+listItem.ip+':'+str(listItem.port)+'/shot.jpg'
-            url = str(url).replace(' ', '')
-            print(url)
-            '''print('inside url',url)
-            imgReq = requests.get(url)'''
-            cap = cv2.VideoCapture(url)
-            _, frame = cap.read()
-            cv2.imshow('frame',frame)
-            '''print('imgReq',imgReq)
-            imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
-            print('imgArr',imgArr)
-            frame = cv2.imdecode(imgArr,-1)
-            print('frame: ',frame)
-            frame = cv2.resize(imgArr,(640,480))'''
-            results = tfnet.return_predict(frame)
-            print('results: ',results)
-            for result in results:
-                if result['label'] == 'person':
-                    count += 1
-
-                    print('count: ',count)
-            cam=CameraDb.query.filter(CameraDb.ip==listItem.ip and CameraDb.port==listItem.port).one()
-            cam.count=count
-            db.session.commit()
-            cap.release()
+       
 
 
-    except:
-        print('error')
+    
 
-    return str(count)
+   
 
 
 

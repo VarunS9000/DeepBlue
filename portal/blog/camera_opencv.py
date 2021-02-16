@@ -55,8 +55,7 @@ class Camera(BaseCamera):
         #}
        
         #tfnet = TFNet(options)
-        tfnet=Loading.tfnet
-
+        
       
        
         try:
@@ -83,7 +82,7 @@ class Camera(BaseCamera):
 
                 #print('frame: ',frame)
                 print('Before frame')
-                results = tfnet.return_predict(frame)
+                results = Loading.tfnet.return_predict(frame)
                 print('got results')
                 count = 0
                 for color,result in zip(colors,results) :

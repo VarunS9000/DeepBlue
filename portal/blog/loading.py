@@ -1,8 +1,12 @@
 from darkflow.net.build import TFNet
 import os
+from blog.models import CameraDb
+import cv2
+from blog import db
 
 class Loading:
     tfnet='loading'
+    
     def load():
         path = os.path.join('C:\DeepBlue','bin\yolov2.weights')
         os.chdir('C:\DeepBlue')
@@ -13,6 +17,15 @@ class Loading:
             'gpu': 1.0
         }
         return TFNet(options)
+
+    def setVar():
+        Loading.tfnet=Loading.load()
+
+    
+    
+
+    
+
         
         
     
