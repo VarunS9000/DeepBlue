@@ -6,7 +6,10 @@ import requests
 import numpy as np
 
 
-
+from tensorflow.keras.preprocessing import image
+from PIL import Image
+import tensorflow
+model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/cnn.h5')
 
 
 
@@ -14,13 +17,13 @@ import numpy as np
 def countPeople(ip,port):
         camera = CameraDb.query.all()
         print('hello people')
-        
-      
+
+
 
         try:
-            
-            
-            
+
+
+
             count = 0
             print('camera: ',camera)
             print('listItem.ip: ',ip)
@@ -43,10 +46,28 @@ def countPeople(ip,port):
             results =Loading.tfnet.return_predict(frame)
             print('results: ',results)
             for result in results:
-                if result['label'] == 'person':
-                    count += 1
+                if label == 'person':
+                    img = frame[result['topleft']['x']:result['bottomright']['x'],result['topleft']['y']:result['bottomright']['y']]
+                    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                    im_pil = Image.fromarray(img)
+                    testImage = image.load_img('11.png',target_size=(64,64))
+                    testImage = image.img_to_array(testImage)
+                    testImage = np.expand_dims(testImage, axis=0)
+                    result = model.predict(testImage)
+                    print(result)
+                    if result[0][0] == 0:
+                        print("it is a human")
+                        count += 1
+                        label = 'person'
+                        text = '{}: {:.0f}%'.format(label, confidence * 100)
+                    else:
+                        print("it is a mannequin")
 
-                    print('count: ',count)
+                        text = 'mannequin'
+
+
+                    frame = cv2.rectangle(frame, first, second, color, 3)
+                    frame = cv2.putText(frame,text,first,cv2.FONT_HERSHEY_COMPLEX, 1,(0,0,0),2)
             cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
             cam.count=count
             db.session.commit()
@@ -56,7 +77,3 @@ def countPeople(ip,port):
             print('error')
 
         return count
-
-        
-
-

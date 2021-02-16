@@ -12,6 +12,11 @@ import requests
 import json
 import time
 from blog.loading import Loading
+from tensorflow.keras.preprocessing import image
+from PIL import Image
+import tensorflow
+model = tensorflow.keras.models.load_model('cnn.h5')
+
 
 #from blog.__init__ import tfnet
 class Camera(BaseCamera):
@@ -45,19 +50,17 @@ class Camera(BaseCamera):
         print('frame: ',frame)
         #yield cv2.imencode('.jpg',frame)[1].tobytes()
         cv2.imshow('frame',frame)
-        path = os.path.join('C:\DeepBlue','bin\yolov2.weights')
-        os.chdir('C:\DeepBlue')
         #options = {
             #'model': 'C:\DeepBlue\cfg\yolo.cfg',
             #'load': path,
             #'threshold': 0.5,
             #'gpu': 1.0
         #}
-       
+
         #tfnet = TFNet(options)
-        
-      
-       
+
+
+
         try:
 
             colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
@@ -93,12 +96,26 @@ class Camera(BaseCamera):
                     confidence = result['confidence']
 
                     if label == 'person':
-                        count += 1
-                        label = label + '   count: ' + str(count)
-                        text = '{}: {:.0f}%'.format(label, confidence * 100)
+                        img = frame[result['topleft']['x']:result['bottomright']['x'],result['topleft']['y']:result['bottomright']['y']]
+                        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                        im_pil = Image.fromarray(img)
+                        testImage = image.load_img('11.png',target_size=(64,64))
+                        testImage = image.img_to_array(testImage)
+                        testImage = np.expand_dims(testImage, axis=0)
+                        result = model.predict(testImage)
+                        print(result)
+                        if result[0][0] == 0:
+                            print("it is a human")
+                            count += 1
+                            label = 'person'
+                            text = '{}: {:.0f}%'.format(label, confidence * 100)
+                        else:
+                            print("it is a mannequin")
+
+                            text = 'mannequin'
+
                         frame = cv2.rectangle(frame, first, second, color, 3)
                         frame = cv2.putText(frame,text,first,cv2.FONT_HERSHEY_COMPLEX, 1,(0,0,0),2)
-
 
 
                 #print('count: ',count)

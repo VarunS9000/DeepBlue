@@ -6,12 +6,12 @@ from blog import db
 
 class Loading:
     tfnet='loading'
-    
+
     def load():
-        path = os.path.join('C:\DeepBlue','bin\yolov2.weights')
-        os.chdir('C:\DeepBlue')
+        path = os.path.join('D:\DeepBlue','bin\yolov2.weights')
+        os.chdir('D:\DeepBlue')
         options = {
-            'model': 'C:\DeepBlue\cfg\yolo.cfg',
+            'model': 'D:\DeepBlue\cfg\yolo.cfg',
             'load': path,
             'threshold': 0.5,
             'gpu': 1.0
@@ -20,12 +20,3 @@ class Loading:
 
     def setVar():
         Loading.tfnet=Loading.load()
-
-    
-    
-
-    
-
-        
-        
-    
