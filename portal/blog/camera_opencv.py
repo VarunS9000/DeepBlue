@@ -11,16 +11,16 @@ import numpy as np
 import requests
 import json
 import time
+import tensorflow
 from blog.loading import Loading
 from tensorflow.keras.preprocessing import image
 from PIL import Image
-import tensorflow
-model = tensorflow.keras.models.load_model('cnn.h5')
 
 
 #from blog.__init__ import tfnet
 class Camera(BaseCamera):
     video_source = 0
+    
 
 
     def __init__(self,ip,port):
@@ -37,6 +37,7 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames(ip,port):
+        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/cnn.h5')
         print('Frame Cam',ip)
         print('Frame Port',port)
         url = 'http://'+ip+':'+port+'/shot.jpg'
@@ -98,17 +99,20 @@ class Camera(BaseCamera):
                     if label == 'person':
                         img = frame[result['topleft']['x']:result['bottomright']['x'],result['topleft']['y']:result['bottomright']['y']]
                         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                        img=cv2.resize(img,(64,64))
+                        print('pass1')
                         im_pil = Image.fromarray(img)
-                        testImage = image.load_img('11.png',target_size=(64,64))
-                        testImage = image.img_to_array(testImage)
+                        print('pass2')
+                        
+                       
+                        testImage = image.img_to_array(im_pil)
                         testImage = np.expand_dims(testImage, axis=0)
-                        result = model.predict(testImage)
-                        print(result)
-                        if result[0][0] == 0:
+                        res = model.predict(testImage)
+                        if res[0][0] == 0:
                             print("it is a human")
                             count += 1
                             label = 'person'
-                            text = '{}: {:.0f}%'.format(label, confidence * 100)
+                            text = '{}: {:.0f}% count:{}'.format(label, confidence * 100, count)
                         else:
                             print("it is a mannequin")
 

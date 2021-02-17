@@ -29,14 +29,19 @@ def loadVar():
     return redirect(url_for('register'))
 @app.route("/register",methods=['GET','POST'])
 def register():
+    if Loading.tfnet=='loading':
+        return redirect(url_for('loadVar'))
+
     
-    form=Registration()
-    if form.validate_on_submit():
-        camera=CameraDb(ip=form.ip.data,region=form.region.data,port=form.port.data)
-        db.session.add(camera)
-        db.session.commit()
-        flash(f'Account created for {form.ip.data}!', 'success')
-        return redirect(url_for('register'))
+    else:
+    
+        form=Registration()
+        if form.validate_on_submit():
+            camera=CameraDb(ip=form.ip.data,region=form.region.data,port=form.port.data)
+            db.session.add(camera)
+            db.session.commit()
+            flash(f'Account created for {form.ip.data}!', 'success')
+            return redirect(url_for('register'))
     return render_template('register.html',title='Register',form=form,values=CameraDb.query.all())
 
 
@@ -77,9 +82,13 @@ def getCount():
 
 @app.route('/camera',methods=['GET'])
 def getCamera():
+    
     ipAdd=request.args.get('ipAdd')
     region=request.args.get('region')
     port=request.args.get('port')
+
+    if ipAdd==None:
+        return redirect(url_for('register'))
 
     return render_template('camera.html',title='Camera',ipAdd=ipAdd,region=region,port=port)
 
