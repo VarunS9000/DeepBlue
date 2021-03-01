@@ -13,6 +13,7 @@ from flask_socketio import send, emit
 from blog.loading import Loading
 import blog.count as cp
 import concurrent.futures
+import threading
 
 
 @socketio.on('coords')
@@ -42,7 +43,34 @@ def register():
             db.session.commit()
             flash(f'Account created for {form.ip.data}!', 'success')
             return redirect(url_for('register'))
-    return render_template('register.html',title='Register',form=form,values=CameraDb.query.all())
+    return render_template('register.html',title='Register',form=form,values=CameraDb.query.all(),mode=cp.mode)
+
+
+@app.route('/advance',methods=['GET','POST'])
+def advancedMode():
+
+    cp.mode=not cp.mode
+
+    if(not cp.mode and len(cp.threadList)>0):
+        cp.threadStatus='stop'
+        for x in cp.threadList:
+            x.join()
+
+    else:
+        cp.threadStatus='running'
+
+    camera = CameraDb.query.all()
+    
+    for x in camera:
+        t=threading.Thread(target=cp.backgroundCount,args=[x.ip,x.port])
+        t.start()
+        cp.threadList.append(t)
+        
+
+
+    return redirect(url_for('register'))
+    
+        
 
 
 
@@ -53,16 +81,27 @@ def getCount():
    
 
     camera = CameraDb.query.all()
+    counts=[]
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        results=[executor.submit(cp.countPeople,x.ip,x.port) for x in camera]
+    if(cp.mode):
+        
+        for c in camera:
+            counts.append(c.count)
+
+    else:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results=[executor.submit(cp.countPeople,x.ip,x.port) for x in camera]
 
 
    
-    counts=[]
-    for f in concurrent.futures.as_completed(results):
-        counts.append(f.result())
+    
+        for f in concurrent.futures.as_completed(results):
+            counts.append(f.result())
 
+
+
+
+    
     print(sum(counts))
 
     return str(sum(counts))

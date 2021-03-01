@@ -68,8 +68,16 @@
               <!-- Navbar Right Side -->
               <div class="navbar-nav">
 
-                <a class="nav-item nav-link" href="">Account</a>
-                <a class="nav-item nav-link" href="">Log Out</a>
+                {% if mode%}
+                <a class="nav-item nav-link" href="{{url_for('advancedMode')}}">Regular</a>
+                {%else%}
+                <a class="nav-item nav-link" href="{{url_for('advancedMode')}}">Advanced</a>
+
+                {%endif%}
+
+
+                
+               
 
                 <a class="nav-item nav-link" href="">Login</a>
                 <a class="nav-item nav-link" href="">Register</a>
