@@ -14,6 +14,16 @@ mode=False
 threadList=[]
 threadStatus='running'
 
+def frameSlice(x1,x2,y1,y2):
+    a=abs(x1-x2)
+    b=abs(y1-y2)
+
+    if(a>b):
+        return a
+    
+    return b
+
+
 
 
 
@@ -21,7 +31,7 @@ threadStatus='running'
 def countPeople(ip,port):
         camera = CameraDb.query.all()
         print('hello people')
-        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/cnn.h5')
+        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
 
 
 
@@ -87,7 +97,7 @@ def countPeople(ip,port):
 def backgroundCount(ip,port):
     camera = CameraDb.query.all()
     print('hello people')
-    model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/cnn.h5')
+    model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
 
     while True:
          try:

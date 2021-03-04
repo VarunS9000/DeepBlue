@@ -32,13 +32,12 @@ def loadVar():
     return redirect(url_for('register'))
 @app.route('/killCam',methods=['GET'])
 def killCam():
-    BaseCamera.lock = acquire()
+    if(request.method=='GET'):
+        BaseCamera.thread.join()
+        #return the svg file!!
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
-    BaseCamera.last_access = time.time() - 400
-    
-    BaseCamera.lock.release()
-    #return the svg file!!
-    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+   
     return send_file('users-solid.svg',mimetype='image/svg')
 
 

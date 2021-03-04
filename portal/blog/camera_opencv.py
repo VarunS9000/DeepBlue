@@ -15,6 +15,7 @@ import tensorflow
 from blog.loading import Loading
 from tensorflow.keras.preprocessing import image
 from PIL import Image
+import blog.count as cp
 
 
 #from blog.__init__ import tfnet
@@ -37,7 +38,7 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames(ip,port):
-        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/cnn.h5')
+        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
         print('Frame Cam',ip)
         print('Frame Port',port)
         url = 'http://'+ip+':'+port+'/shot.jpg'
@@ -71,13 +72,14 @@ class Camera(BaseCamera):
                 imgReq = requests.get(url)
                 imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
                 frame = cv2.imdecode(imgArr,-1)
-                frame = cv2.resize(frame,(640,480))
+                frame = cv2.resize(frame,(640,640))
                 cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
                 rect=[]
                 rect.append(cam.x1)
                 rect.append(cam.y1)
-                rect.append(cam.x2)
-                rect.append(cam.y2)
+                val=cp.frameSlice(cam.x1,cam.x2,cam.y1,cam.y2)
+                rect.append(cam.x1+val)
+                rect.append(cam.y1+val)
                 rect = [int(x) for x in rect]
                 print('rect: ',rect)
                 if rect != [0,0,0,0]:

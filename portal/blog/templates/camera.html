@@ -119,8 +119,8 @@
           var k = document.getElementsByClassName('img')[0];
           k.src = ''
           $.ajax({
-            url: '/killCam',
-            type: 'get',
+            url: "{{url_for('killCam')}}",
+            type: 'GET',
             success: function(data) {
               alert('success')
               console.log(data);
