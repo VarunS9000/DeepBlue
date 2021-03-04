@@ -14,6 +14,8 @@ from blog.loading import Loading
 import blog.count as cp
 import concurrent.futures
 import threading
+from blog.base_camera import BaseCamera
+from flsk import send_file
 
 
 @socketio.on('coords')
@@ -30,9 +32,9 @@ def loadVar():
     return redirect(url_for('register'))
 @app.route('/killCam',methods=['GET'])
 def killCam():
-    #kill the thread here....
+    BaseCamera.last_access=0
     #return the svg file!!
-    return yield()
+    return send_file('users-solid.svg',mimetype='image/svg')
 
 
 @app.route("/loadTfnet",methods=['GET'])
