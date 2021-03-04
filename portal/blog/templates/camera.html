@@ -105,9 +105,10 @@
 </style>
 <body>
     <h1 id="titleType">Camera View</h1>
-    <center id="dis" style=" display: inline-block; "><img id="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i title="stop the feed" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
+    <center id="dis" style=" display: inline-block; "><img id="img" class="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i title="stop the feed" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
     <canvas id="canvas" width="300" height="300"></canvas>
     <script type="text/javascript">
+
 
       document.getElementsByClassName('fas')[0].style.color = 'red';
       var closeSRC = document.getElementsByClassName('fas')[0];
@@ -115,13 +116,25 @@
       closeSRC.addEventListener('click',(e) => {
         if(srcClick == false){
 
-          document.getElementById('img').src = '/killCam'
+          var k = document.getElementsByClassName('img')[0];
+          k.src = ''
+          $.ajax({
+            url: '/killCam',
+            type: 'get',
+            success: function(data) {
+              alert('success')
+              console.log(data);
+              var cen = document.getElementById('dis')
+              cen.innerHTML = data
+            }
+
+          })
           srcClick = true;
           document.getElementsByClassName('fas')[0].style.color = 'green';
           document.getElementsByClassName('fas')[0].title = 'start feed again'
         }
         else {
-          document.getElementById('img').src = "{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"
+          document.getElementById('img').src = `{{url_for('video_feed',ipAdd=ipAdd,port=port)}}`
           document.getElementsByClassName('fas')[0].style.color = 'red';
           document.getElementsByClassName('fas')[0].title = 'Stop the feed'
           srcClick = false

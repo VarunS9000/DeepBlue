@@ -50,7 +50,7 @@ class Camera(BaseCamera):
         frame = cv2.resize(frame,(640,480))
         print('frame: ',frame)
         #yield cv2.imencode('.jpg',frame)[1].tobytes()
-        cv2.imshow('frame',frame)
+        #cv2.imshow('frame',frame)
         #options = {
             #'model': 'C:\DeepBlue\cfg\yolo.cfg',
             #'load': path,

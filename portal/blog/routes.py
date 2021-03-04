@@ -15,8 +15,8 @@ import blog.count as cp
 import concurrent.futures
 import threading
 from blog.base_camera import BaseCamera
-from flsk import send_file
-
+from flask import send_file
+import time
 
 @socketio.on('coords')
 def handle_json(json):
@@ -32,8 +32,13 @@ def loadVar():
     return redirect(url_for('register'))
 @app.route('/killCam',methods=['GET'])
 def killCam():
-    BaseCamera.last_access=0
+    BaseCamera.lock = acquire()
+
+    BaseCamera.last_access = time.time() - 400
+    
+    BaseCamera.lock.release()
     #return the svg file!!
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     return send_file('users-solid.svg',mimetype='image/svg')
 
 
