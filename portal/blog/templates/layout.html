@@ -14,47 +14,111 @@
    {% endif %}
 </head>
 
+
+
+
 <style media="screen">
-  .region:hover  {
+  .region:hover {
     cursor: pointer;
-    background-color: #0f0f0f;
-    color: #f0f0f0;
+    background-color: gray;
+    color: black;
+    border: 2px dotted black;
   }
-    /* Start by setting display:none to make this hidden.
-     Then we position it in relation to the viewport window
-     with position:fixed. Width, height, top and left speak
-     for themselves. Background we set to 80% white with
-     our animation centered, and no-repeating */
-  .modal {
-      display:    none;
-      position:   fixed;
-      z-index:    1000;
-      top:        0;
-      left:       0;
-      height:     100%;
-      width:      100%;
-      background: rgba( 255, 255, 255, .8 )
-                  url('http://i.stack.imgur.com/FhHRx.gif')
-                  50% 50%
-                  no-repeat;
+  .region a{
+    color: black;
   }
 
-  /* When the body has the loading class, we turn
-     the scrollbar off with overflow:hidden */
-  body.loading .modal {
+
+  .circle{
+
+     display: none;
+     position: absolute;
+     top:50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     width: 150px;
+     height: 150px;
+     background: #ccc;
+     border: 5px solid #4973ff;
+     border-radius: 50%;
+     overflow: hidden;
+  }
+  .wave{
+     position: relative;
+     width: 100%;
+     height: 100%;
+     background: #4973ff;
+     border-radius: 50%;
+     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+  }
+  .wave:before,
+  .wave:after
+  {
+     content: '';
+     position: absolute;
+     width: 200%;
+     height: 200%;
+     top: 0;
+     left: 50%;
+     transform: translate(-50%, -75%);
+  }
+  .wave:before{
+     border-radius: 45%;
+     background: rgba(255, 255, 255, 1);
+     animation: animate 5s linear infinite;
+  }
+  .wave:after{
+     border-radius: 40%;
+     background: rgba(255, 255, 255, .5);
+     animation: animate 10s linear infinite;
+  }
+  @keyframes animate{
+     0%{
+         transform: translate(-50%, -75%) rotate(0deg);
+     }
+     100%{
+         transform: translate(-50%, -75%) rotate(360deg);
+     }
+  }
+  #countInput:hover{
+    cursor: pointer;
+    background-color: gray;
+    border: 2px dotted black;
+    color: black;
+  }
+  #countInput:active{
+    transform: scale(1.1);
+  }
+  #myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+  }
+  body.loading .circle {
       overflow: hidden;
   }
 
   /* Anytime the body has the loading class, our
      modal element will be visible */
-  body.loading .modal {
+  body.loading .circle {
       display: block;
   }
+
+
+  body {
+    background: linear-gradient(to right,#333ccc,#000000);
+  }
+
 </style>
 
 <body>
-    <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <script type="text/javascript">
+      window.reload()
+    </script>
+    <header class="site-header" id="header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" style=" background: linear-gradient(to right,#000000,#33336c);  "><!--linear-gradient(to right,#000000,#33336c);-->
           <div class="container">
             <a class="navbar-brand mr-4" href="/">Register</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,8 +140,8 @@
                 {%endif%}
 
 
-                
-               
+
+
 
                 <a class="nav-item nav-link" href="">Login</a>
                 <a class="nav-item nav-link" href="">Register</a>
@@ -87,6 +151,7 @@
           </div>
         </nav>
       </header>
+
       <main role="main" class="container">
         <div class="row">
           <div class="col-md-8">
@@ -112,10 +177,20 @@
                 </ul>
               </p>
             </div>
+            <div class="content-section">
+              <h3>Real time count</h3>
+              <p class="text-muted">
+                <ul>
+                  <li class="list-group-item list-group-item-light" id="countInput">click</li>
+                </ul>
+              </p>
+              <p id="count"></p>
+            </div>
           </div>
         </div>
-        <input type="button" id="countInput" name="" value="Get real time total count"> <p id="count"></p>
+        <!--<input type="button" id="countInput" name="" value="Get real time total count"> <p id="count"></p>-->
         <script type="text/javascript">
+
           $('#countInput').click(function(){
             $.ajax({
               url: "/getCount",
@@ -130,10 +205,12 @@
             });
           })
           $body = $("body");
-
+          var bgcolor = document.body.style.backgroundColor;
+          var op = document.body.style.opacity;
           $(document).on({
-              ajaxStart: function() { $body.addClass("loading");    },
-               ajaxStop: function() { $body.removeClass("loading"); }
+              ajaxStart: function() { $body.addClass("loading"); document.body.style.backgroundColor = 'black'; document.body.style.opacity = '0.6'   },
+               ajaxStop: function() { $body.removeClass("loading"); document.body.style.backgroundColor = bgcolor; document.body.style.opacity = op}
+
           });
         </script>
       </main>
@@ -143,7 +220,11 @@
 
     <!--<script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
-    <div class="modal"><!-- Place at bottom of page --></div>
+      <div class="circle">
+            <div class="wave">
+
+            </div>
+        </div>
 </body>
 
 

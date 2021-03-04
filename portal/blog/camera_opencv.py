@@ -20,7 +20,7 @@ from PIL import Image
 #from blog.__init__ import tfnet
 class Camera(BaseCamera):
     video_source = 0
-    
+
 
 
     def __init__(self,ip,port):
@@ -37,7 +37,7 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames(ip,port):
-        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/cnn.h5')
+        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/cnn.h5')
         print('Frame Cam',ip)
         print('Frame Port',port)
         url = 'http://'+ip+':'+port+'/shot.jpg'
@@ -103,8 +103,8 @@ class Camera(BaseCamera):
                         print('pass1')
                         im_pil = Image.fromarray(img)
                         print('pass2')
-                        
-                       
+
+
                         testImage = image.img_to_array(im_pil)
                         testImage = np.expand_dims(testImage, axis=0)
                         res = model.predict(testImage)

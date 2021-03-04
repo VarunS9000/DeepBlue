@@ -6,52 +6,136 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
     <title>Document</title>
 </head>
 <style media="screen">
   #img {
-    border: 3px dotted black;
-    float: left;
+    border: 3px dotted white;
+    padding: 2em;
+    margin: 3em;
+    width: 30em;
+    height: 30em;
+    margin-left: 25em;
   }
-  /* Start by setting display:none to make this hidden.
-   Then we position it in relation to the viewport window
-   with position:fixed. Width, height, top and left speak
-   for themselves. Background we set to 80% white with
-   our animation centered, and no-repeating */
-.modal {
-    display:    none;
-    position:   fixed;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
-    background: rgba( 255, 255, 255, .8 )
-                url('http://i.stack.imgur.com/FhHRx.gif')
-                50% 50%
-                no-repeat;
-}
+  body {
+    background: linear-gradient(to right,#333ccc,#000000);
+    color: white;
+  }
+  .circle{
 
-/* When the body has the loading class, we turn
-   the scrollbar off with overflow:hidden */
-body.loading .modal {
-    overflow: hidden;
-}
+     display: none;
+     position: absolute;
+     top:50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     width: 150px;
+     height: 150px;
+     background: #ccc;
+     border: 5px solid #4973ff;
+     border-radius: 50%;
+     overflow: hidden;
+  }
+  .wave{
+     position: relative;
+     width: 100%;
+     height: 100%;
+     background: #4973ff;
+     border-radius: 50%;
+     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+  }
+  .wave:before,
+  .wave:after
+  {
+     content: '';
+     position: absolute;
+     width: 200%;
+     height: 200%;
+     top: 0;
+     left: 50%;
+     transform: translate(-50%, -75%);
+  }
+  .wave:before{
+     border-radius: 45%;
+     background: rgba(255, 255, 255, 1);
+     animation: animate 5s linear infinite;
+  }
+  .wave:after{
+     border-radius: 40%;
+     background: rgba(255, 255, 255, .5);
+     animation: animate 10s linear infinite;
+  }
+  @keyframes animate{
+     0%{
+         transform: translate(-50%, -75%) rotate(0deg);
+     }
+     100%{
+         transform: translate(-50%, -75%) rotate(360deg);
+     }
+  }
+  #countInput:hover{
+    cursor: pointer;
+    background-color: gray;
+    border: 2px dotted black;
+    color: black;
+  }
+  #countInput:active{
+    transform: scale(1.1);
+  }
+  #myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+  }
+  body.loading .circle {
+      overflow: hidden;
+  }
 
-/* Anytime the body has the loading class, our
-   modal element will be visible */
-body.loading .modal {
-    display: block;
-}
+  /* Anytime the body has the loading class, our
+     modal element will be visible */
+  body.loading .circle {
+      display: block;
+  }
+  .fas {
+    cursor: pointer;
+  }
+
 </style>
 <body>
-    <h1>Camera View</h1>
-    <br>
-    <p id="coords"></p> ************************ <p id="canvasCoords"></p>
-    <br><br>
-    <img id="img" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}">
+    <h1 id="titleType">Camera View</h1>
+    <center id="dis" style=" display: inline-block; "><img id="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i title="stop the feed" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
     <canvas id="canvas" width="300" height="300"></canvas>
     <script type="text/javascript">
+
+      document.getElementsByClassName('fas')[0].style.color = 'red';
+      var closeSRC = document.getElementsByClassName('fas')[0];
+      var srcClick = false;
+      closeSRC.addEventListener('click',(e) => {
+        if(srcClick == false){
+
+          document.getElementById('img').src = '/killCam'
+          srcClick = true;
+          document.getElementsByClassName('fas')[0].style.color = 'green';
+          document.getElementsByClassName('fas')[0].title = 'start feed again'
+        }
+        else {
+          document.getElementById('img').src = "{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"
+          document.getElementsByClassName('fas')[0].style.color = 'red';
+          document.getElementsByClassName('fas')[0].title = 'Stop the feed'
+          srcClick = false
+        }
+      })
+
+      document.getElementById('titleType').innerHTML += ': -' +  `<a style="color: white" href=http://` + window.location.toString().split('?')[1].split('=')[1].split('&')[0] + ':' + window.location.toString().split('?')[1].split('=')[3] + `> click to goto cam IP</a>`
+      if(document.getElementById('img').src == '') {
+        $body.addClass("loading")
+      }
+
+      if(document.getElementById('img').src != '')  {
+        $body.removeClass("loading")
+      }
       var coords = []
       var img = document.getElementById('img');
       clicked = false
@@ -145,10 +229,12 @@ body.loading .modal {
 
 
       $body = $("body");
-
+      var bgcolor = document.body.style.backgroundColor;
+      var op = document.body.style.opacity;
       $(document).on({
-          ajaxStart: function() { $body.addClass("loading");    },
-           ajaxStop: function() { $body.removeClass("loading"); }
+          ajaxStart: function() { $body.addClass("loading"); document.body.style.backgroundColor = 'black'; document.body.style.opacity = '0.6'   },
+           ajaxStop: function() { $body.removeClass("loading"); document.body.style.backgroundColor = bgcolor; document.body.style.opacity = op}
+
       });
 
 

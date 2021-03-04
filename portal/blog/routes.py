@@ -26,16 +26,34 @@ def handle_json(json):
 
 @app.route("/",methods=['GET','POST'])
 def loadVar():
-    Loading.setVar()
+
     return redirect(url_for('register'))
+@app.route('/killCam',methods=['GET'])
+def killCam():
+    #kill the thread here....
+    #return the svg file!!
+    return yield()
+
+
+@app.route("/loadTfnet",methods=['GET'])
+def loadTfnet():
+    Loading.setVar()
+    form=Registration()
+    if form.validate_on_submit():
+        camera=CameraDb(ip=form.ip.data,region=form.region.data,port=form.port.data)
+        db.session.add(camera)
+        db.session.commit()
+        flash(f'Account created for {form.ip.data}!', 'success')
+        return redirect(url_for('register'))
+    return str('/register')
+
 @app.route("/register",methods=['GET','POST'])
 def register():
     if Loading.tfnet=='loading':
-        return redirect(url_for('loadVar'))
+        print('*******************************************************************************************************')
+        return render_template('waves.html',title='Loading..',values = Loading)
 
-    
-    else:
-    
+    if Loading.done :
         form=Registration()
         if form.validate_on_submit():
             camera=CameraDb(ip=form.ip.data,region=form.region.data,port=form.port.data)
@@ -43,7 +61,9 @@ def register():
             db.session.commit()
             flash(f'Account created for {form.ip.data}!', 'success')
             return redirect(url_for('register'))
-    return render_template('register.html',title='Register',form=form,values=CameraDb.query.all(),mode=cp.mode)
+        return render_template('register.html',title='Register',form=form,values=CameraDb.query.all(),mode=cp.mode)
+
+
 
 
 @app.route('/advance',methods=['GET','POST'])
@@ -60,31 +80,33 @@ def advancedMode():
         cp.threadStatus='running'
 
     camera = CameraDb.query.all()
-    
+
     for x in camera:
         t=threading.Thread(target=cp.backgroundCount,args=[x.ip,x.port])
         t.start()
         cp.threadList.append(t)
-        
+
 
 
     return redirect(url_for('register'))
-    
-        
 
 
+
+@app.route("/user",methods=['GET'])
+def user():
+    return render_template('user.html', title='crowd counting mall')
 
 
 
 @app.route("/getCount",methods=['POST','GET'])
 def getCount():
-   
+
 
     camera = CameraDb.query.all()
     counts=[]
 
     if(cp.mode):
-        
+
         for c in camera:
             counts.append(c.count)
 
@@ -93,35 +115,35 @@ def getCount():
             results=[executor.submit(cp.countPeople,x.ip,x.port) for x in camera]
 
 
-   
-    
+
+
         for f in concurrent.futures.as_completed(results):
             counts.append(f.result())
 
 
 
 
-    
+
     print(sum(counts))
 
     return str(sum(counts))
 
-    
 
 
-        
-       
 
 
-    
 
-   
+
+
+
+
+
 
 
 
 @app.route('/camera',methods=['GET'])
 def getCamera():
-    
+
     ipAdd=request.args.get('ipAdd')
     region=request.args.get('region')
     port=request.args.get('port')
@@ -162,7 +184,7 @@ def sendFrame():
 @app.route('/setCount',methods=['POST'])
 def setCount():
     #print('inisde setCount bruh')
-    req_data = request.get_json(force=True)
+    q_data = request.get_json(force=True)
     count = req_data['count']
     print('req_data: ',req_data)
     #insert into db

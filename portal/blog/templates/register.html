@@ -1,4 +1,4 @@
-{% extends "layout.html"%}   
+{% extends "layout.html"%}
 {% block content %}
     <div class="content-section">
         <form method="POST" action="">
@@ -17,10 +17,11 @@
                         {%else%}
                          {{form.ip(class="form-control form-control-lg")}}
                         {% endif %}
-                    
+
                 </div>
 
                 <div class="form-group">
+                  
                     {{form.port.label(class="form-control-label")}}
                     {% if form.port.errors %}
                         {{form.port(class="form-control form-control-lg is-invalid")}}
@@ -48,8 +49,8 @@
                     {% endif %}
                 </div>
 
-                
-                
+
+
             </fieldset>
             <div class="form-group">
                 {{form.submit(class="btn btn-outline-info")}}
@@ -58,5 +59,5 @@
 
     </div>
 
-    
+
 {% endblock content %}

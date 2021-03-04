@@ -21,7 +21,7 @@ threadStatus='running'
 def countPeople(ip,port):
         camera = CameraDb.query.all()
         print('hello people')
-        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/cnn.h5')
+        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/cnn.h5')
 
 
 
@@ -58,17 +58,17 @@ def countPeople(ip,port):
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                     img=cv2.resize(img,(64,64))
                     im_pil = Image.fromarray(img)
-                   
+
                     testImage = image.img_to_array(im_pil)
                     testImage = np.expand_dims(testImage, axis=0)
-                    
-                    
+
+
                     res = model.predict(testImage)
                     print(res)
                     if res[0][0] == 0:
                         print("it is a human")
                         count += 1
-                        
+
                     else:
                         print("it is a mannequin")
 
@@ -125,17 +125,17 @@ def backgroundCount(ip,port):
                             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                             img=cv2.resize(img,(64,64))
                             im_pil = Image.fromarray(img)
-                        
+
                             testImage = image.img_to_array(im_pil)
                             testImage = np.expand_dims(testImage, axis=0)
-                            
-                            
+
+
                             res = model.predict(testImage)
                             print(res)
                             if res[0][0] == 0:
                                 print("it is a human")
                                 count += 1
-                                
+
                             else:
                                 print("it is a mannequin")
 
@@ -148,7 +148,3 @@ def backgroundCount(ip,port):
 
          except:
                  print('error')
-
-
-
-
