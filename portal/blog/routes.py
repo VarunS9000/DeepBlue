@@ -17,6 +17,7 @@ import threading
 from blog.base_camera import BaseCamera
 from flask import send_file
 import time
+import base64
 
 @socketio.on('coords')
 def handle_json(json):
@@ -35,10 +36,22 @@ def killCam():
     if(request.method=='GET'):
         BaseCamera.thread.join()
         #return the svg file!!
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        
 
-   
-    return send_file('users-solid.svg',mimetype='image/svg')
+        with open("icon.png", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+            return str(encoded_string)
+@app.route('/icon',methods=['GET'])
+def icon():
+
+
+    with open("icon.png", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+        return str(encoded_string)
+
+@app.route('/videoDemo',methods=['GET'])
+def videDemo():
+    return render_template('videos.html')
 
 
 @app.route("/loadTfnet",methods=['GET'])

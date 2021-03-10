@@ -61,13 +61,17 @@
      }
  }
  .loadin {
+   position: absolute;
+   top:65%;
+   left: 48%;
    box-sizing: border-box;
    width: 80px;
    height: 80px;
-   margin: 20px;
-   padding: 10px;
    text-align: center;
    display: inline-block;
+   color: white;
+   font-family: "Comic Sans MS", "Comic Sans", cursive;
+   font-size: 140%
  }
   </style>
   <body>
@@ -78,9 +82,10 @@
 
     </div>
     <div class="loadin">
-      Loading...
+      Loading....
     </div>
     <script type="text/javascript">
+
       $.ajax({
         url: '/loadTfnet',
         type: 'get',
@@ -93,6 +98,21 @@
           window.location = data
         }
       })
+
+      var l = document.getElementsByClassName('loadin')[0];
+      var count = 1;
+      function abc() {
+        if(count == 5) {
+          count = 1;
+        }
+        l.innerHTML = 'Loading' + '.'.repeat(count)
+        console.log(l.innerHTML);
+        count += 1;
+        setTimeout(abc,500)
+      }
+
+      abc()
+
     </script>
   </body>
 </html>

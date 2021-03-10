@@ -11,12 +11,13 @@
 </head>
 <style media="screen">
   #img {
-    border: 3px dotted white;
-    padding: 2em;
+    border: 1em inset white;
+
     margin: 3em;
     width: 30em;
     height: 30em;
     margin-left: 25em;
+
   }
   body {
     background: linear-gradient(to right,#333ccc,#000000);
@@ -98,8 +99,26 @@
   body.loading .circle {
       display: block;
   }
+  body.loading .loadin {
+    display: block;
+  }
   .fas {
     cursor: pointer;
+  }
+
+  .loadin {
+    display: none;
+    position: absolute;
+    top:65%;
+    left: 48%;
+    box-sizing: border-box;
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    display: inline-block;
+    color: white;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 140%
   }
 
 </style>
@@ -108,6 +127,7 @@
     <center id="dis" style=" display: inline-block; "><img id="img" class="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i title="stop the feed" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
     <canvas id="canvas" width="300" height="300"></canvas>
     <script type="text/javascript">
+
 
 
       document.getElementsByClassName('fas')[0].style.color = 'red';
@@ -123,9 +143,9 @@
             type: 'GET',
             success: function(data) {
               alert('success')
-              console.log(data);
-              var cen = document.getElementById('dis')
-              cen.innerHTML = data
+              //console.log(data);
+              var ii = document.getElementById('img');
+              ii.src = 'data:image/png;base64,' + data.toString()
             }
 
           })
@@ -244,15 +264,42 @@
       $body = $("body");
       var bgcolor = document.body.style.backgroundColor;
       var op = document.body.style.opacity;
+      var myVar = ''
       $(document).on({
-          ajaxStart: function() { $body.addClass("loading"); document.body.style.backgroundColor = 'black'; document.body.style.opacity = '0.6'   },
-           ajaxStop: function() { $body.removeClass("loading"); document.body.style.backgroundColor = bgcolor; document.body.style.opacity = op}
+          ajaxStart: function() { $body.addClass("loading"); document.body.style.backgroundColor = 'black'; document.body.style.opacity = '0.6'; abc()   },
+           ajaxStop: function() { $body.removeClass("loading"); document.body.style.backgroundColor = bgcolor; document.body.style.opacity = op; clearTimeout(myVar); var vv = document.getElementsByClassName('loadin')[0]; vv.innerHTML = ''}
 
       });
 
 
 
     </script>
-    <div class="modal"><!-- Place at bottom of page --></div>
+    <div class="circle">
+            <div class="wave">
+
+            </div>
+
+    </div>
+    <div class="loadin">
+      Loading....
+    </div>
+    <script type="text/javascript">
+
+
+      var l = document.getElementsByClassName('loadin')[0];
+      l.innerHTML = '';
+      var count = 1;
+      function abc() {
+        if(count == 5) {
+          count = 1;
+        }
+        l.innerHTML = 'Loading' + '.'.repeat(count)
+        console.log(l.innerHTML);
+        count += 1;
+        myVar = setTimeout(abc,500)
+      }
+
+
+    </script>
 </body>
 </html>

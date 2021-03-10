@@ -106,9 +106,33 @@
       display: block;
   }
 
+  body.loading .loadin {
+      display: block;
+  }
 
   body {
     background: linear-gradient(to right,#333ccc,#000000);
+  }
+
+  .content-section {
+    border-radius: 1.8em;
+    margin-top: 3em;
+    margin-right: 2em;
+  }
+
+  .loadin {
+    display: none;
+    position: absolute;
+    top:65%;
+    left: 48%;
+    box-sizing: border-box;
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    display: inline-block;
+    color: white;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 140%
   }
 
 </style>
@@ -143,8 +167,8 @@
 
 
 
-                <a class="nav-item nav-link" href="">Login</a>
-                <a class="nav-item nav-link" href="">Register</a>
+
+                <a class="nav-item nav-link" href="/videoDemo">Demo videos</a>
 
               </div>
             </div>
@@ -168,8 +192,8 @@
           </div>
           <div class="col-md-4">
             <div class="content-section">
-              <h3>Our Sidebar</h3>
-              <p class='text-muted'>You can put any information here you'd like.
+              <h3>Regions</h3>
+              <p class='text-muted'>Select to view cam with classification <br>(human V mannequin)
                 <ul class="list-group">
                   {%for val in values %}
                   <li class="list-group-item list-group-item-light region"><a href="{{url_for('getCamera',ipAdd=val.ip,region=val.region,port=val.port)}}">{{val.region}}</a></li>
@@ -184,7 +208,7 @@
                   <li class="list-group-item list-group-item-light" id="countInput">click</li>
                 </ul>
               </p>
-              <p id="count"></p>
+              <p id="count" ></p>
             </div>
           </div>
         </div>
@@ -200,16 +224,17 @@
               },
               success: function(data) {
                 alert('success')
-                document.getElementById('count').innerHTML = data;
+                document.getElementById('count').innerHTML ='Count: '+ data;
               }
             });
           })
           $body = $("body");
           var bgcolor = document.body.style.backgroundColor;
           var op = document.body.style.opacity;
+          var myVar = '';
           $(document).on({
-              ajaxStart: function() { $body.addClass("loading"); document.body.style.backgroundColor = 'black'; document.body.style.opacity = '0.6'   },
-               ajaxStop: function() { $body.removeClass("loading"); document.body.style.backgroundColor = bgcolor; document.body.style.opacity = op}
+              ajaxStart: function() { $body.addClass("loading");  document.body.style.backgroundColor = 'black'; document.body.style.opacity = '0.6';abc()   },
+               ajaxStop: function() { $body.removeClass("loading"); document.getElementsByClassName('loadin')[0].style.display = 'none'; document.body.style.backgroundColor = bgcolor; document.body.style.opacity = op; clearTimeout(myVar); document.getElementsByClassName('loadin')[0].innerHTML = ''}
 
           });
         </script>
@@ -224,7 +249,30 @@
             <div class="wave">
 
             </div>
-        </div>
+      </div>
+      <div class="loadin">
+        Loading....
+      </div>
+      <script type="text/javascript">
+
+        var l = document.getElementsByClassName('loadin')[0];
+        var count = 1;
+        function abc() {
+          l.style.color = 'black'
+          console.log('inside..');
+          if(count == 5) {
+            count = 1;
+          }
+          l.innerHTML = 'Loading' + '.'.repeat(count)
+          console.log(l.innerHTML);
+          count += 1;
+          myVar = setTimeout(abc,500)
+        }
+
+
+
+      </script>
+
 </body>
 
 

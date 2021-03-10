@@ -16,18 +16,18 @@ from tensorflow.keras.preprocessing import image
 from PIL import Image
 from darkflow.net.build import TFNet
 
-cap = cv2.VideoCapture('sample.mp4') 
+cap = cv2.VideoCapture('sample1.mp4')
 i=0
 
 
 
 
-model = tensorflow.keras.models.load_model('C:/DeepBlueTest/portal/6.h5')
+model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/6.h5')
 
-path= os.path.join('C:\DeepBlueTest','bin\yolov2.weights')
-os.chdir('C:\DeepBlueTest')
+path= os.path.join('D:\DeepBlue','bin\yolov2.weights')
+os.chdir('D:\DeepBlue')
 options = {
-    'model': 'C:\DeepBlueTest\cfg\yolo.cfg',
+    'model': 'D:\DeepBlue\cfg\yolo.cfg',
     'load': path,
     'threshold': 0.5,
     'gpu': 1.0
@@ -58,17 +58,23 @@ tfnet=TFNet(options)
 
 colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
 oldTime = time.time()
+
+
+
+vid_cod = cv2.VideoWriter_fourcc(*'mp4v')
+resultK = cv2.VideoWriter('D:\DeepBlue\portal\demo1.mp4', vid_cod, 20.0, (640,640))
 print('oldTime',oldTime)
-while True:
+
+while cap.isOpened():
 
     _,frame=cap.read()
-    
+
     frame = cv2.resize(frame,(640,640))
     #frame = cv2.resize(frame,(640,420),interpolation=cv2.INTER_AREA)
-    
+
     print('Before frame')
-    
-    
+
+
     results = tfnet.return_predict(frame)
     print('got results')
     count = 0
@@ -90,8 +96,8 @@ while True:
             print('pass1')
             im_pil = Image.fromarray(img)
             print('pass2')
-            
-            
+
+
             testImage = image.img_to_array(im_pil)
             testImage = np.expand_dims(testImage, axis=0)
             res = model.predict(testImage)
@@ -108,16 +114,14 @@ while True:
             frame = cv2.rectangle(frame, first, second, color, 3)
             frame = cv2.putText(frame,text,first,cv2.FONT_HERSHEY_COMPLEX, 1,(0,0,0),2)
     cv2.imshow('frame',frame)
+    resultK.write(frame)
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cap.release()
-        cv2.destroyAllWindows() 
+        resultK.release()
+        cv2.destroyAllWindows()
         break
-   
-   
+
+
 
 
     #print('count: ',count)
-        
-
-
-

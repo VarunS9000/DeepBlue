@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Model Demo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  </head>
+  <style media="screen">
+    body {
+      background: linear-gradient(to right,#333ccc,#000000);
+      font-family: "Comic Sans MS", "Comic Sans", cursive;
+      color: white;
+    }
+    .box-to-select {
+      margin: 5em;
+      padding: 1em;
+      background-color: white;
+      color: black;
+      width: 20em;
+      min-height: 10em;
+      box-sizing: border-box;
+      float: left;
+      text-align: center;
+      display: inline-block;
+      border: 1em inset;
+      text-align: center;
+    }
+    .video-box {
+      margin: 5em;
+
+      background-color: white;
+      width: 42em;
+      padding: 2em;
+      min-height: 25em;
+      box-sizing: border-box;
+      float: left;
+      color: black;
+      text-align: center;
+      display: inline-block;
+      border: 1em inset;
+
+    }
+    li {
+      cursor: pointer;
+      list-style-type: none;
+      text-align: center;
+    }
+    .title-demo-video {
+      width: 10em;
+      height: 2em;
+      padding: 2em;
+      float: left;
+      margin-top: 5em;
+      margin-left: 20em;
+    }
+  </style>
+  <body>
+    <div class="box-to-select">
+      <h2> <b>Select the video</b> </h2>
+      <ul>
+        <u><li title="demo 1" id="link1">Demo video 1 </li> <br></u>
+        <u><li title="demo 2" id="link2">Demo video 2 </li> <br></u>
+      </ul>
+    </div>
+    <div class="video-box">
+      <iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/IH4JOMyH_VQ?loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <script type="text/javascript">
+
+      document.getElementById('link1').addEventListener('click',(e) => {
+        document.getElementsByClassName('video-box')[0].innerHTML = ''
+        //await new Promise(r => setTimeout(r, 500));
+        document.getElementsByClassName('video-box')[0].innerHTML = "<iframe id='video' width='560' height='315' src='https://www.youtube.com/embed/IH4JOMyH_VQ?loop=1' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
+      })
+
+      document.getElementById('link2').addEventListener('click',(e) => {
+        document.getElementsByClassName('video-box')[0].innerHTML = ''
+        //await new Promise(r => setTimeout(r, 500));
+        document.getElementsByClassName('video-box')[0].innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/OJPj-QCUxhw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+      })
+    </script>
+  </body>
+</html>
