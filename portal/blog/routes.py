@@ -226,6 +226,8 @@ def getIp():
 @app.route('/videoFeed',methods=['GET'])
 def video_feed():
 
+    Camera.threadStatus='start'
+
     ip=request.args.get('ipAdd')
     port=request.args.get('port')
     print(ip)

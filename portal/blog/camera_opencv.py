@@ -78,7 +78,7 @@ class Camera(BaseCamera):
             colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
             oldTime = time.time()
             print('oldTime',oldTime)
-            Camera.threadStatus='start'
+            
             while True:
                 imgReq = requests.get(url)
                 imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
