@@ -31,14 +31,15 @@ def handle_json(json):
 def loadVar():
 
     return redirect(url_for('register'))
-@app.route('/killCam',methods=['GET'])
+@app.route('/killCam',methods=['POST'])
 def killCam():
-    if(request.method=='GET'):
+    if(request.method=='POST'):
+        Camera.threadStatus='stop'
         BaseCamera.thread.join()
         #return the svg file!!
         
 
-        with open("icon.png", "rb") as image_file:
+        with open("C:\DeepBlue\portal\icon.png", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
             return str(encoded_string)
 @app.route('/icon',methods=['GET'])

@@ -31,7 +31,7 @@ def frameSlice(x1,x2,y1,y2):
 def countPeople(ip,port):
         camera = CameraDb.query.all()
         print('hello people')
-        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/6.h5')
+        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
 
 
 
@@ -97,7 +97,7 @@ def countPeople(ip,port):
 def backgroundCount(ip,port):
     camera = CameraDb.query.all()
     print('hello people')
-    model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/6.h5')
+    model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
 
     while True:
          try:

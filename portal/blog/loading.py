@@ -8,10 +8,10 @@ class Loading:
     tfnet='loading'
     done = False
     def load():
-        path = os.path.join('D:\DeepBlue','bin\yolov2.weights')
-        os.chdir('D:\DeepBlue')
+        path = os.path.join('C:\DeepBlue','bin\yolov2.weights')
+        os.chdir('C:\DeepBlue')
         options = {
-            'model': 'D:\DeepBlue\cfg\yolo.cfg',
+            'model': 'C:\DeepBlue\cfg\yolo.cfg',
             'load': path,
             'threshold': 0.5,
             'gpu': 1.0

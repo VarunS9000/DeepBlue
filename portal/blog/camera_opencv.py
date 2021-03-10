@@ -21,6 +21,8 @@ import blog.count as cp
 #from blog.__init__ import tfnet
 class Camera(BaseCamera):
     video_source = 0
+    threadStatus='running'
+    back_port=''
 
 
 
@@ -38,9 +40,17 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames(ip,port):
-        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/6.h5')
+        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
         print('Frame Cam',ip)
         print('Frame Port',port)
+        if(port is not None):
+            Camera.back_port=port
+
+        else:
+            port=Camera.back_port
+
+        
+        
         url = 'http://'+ip+':'+port+'/shot.jpg'
         url = str(url)
         #print('rect: ',rect)
@@ -68,6 +78,7 @@ class Camera(BaseCamera):
             colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
             oldTime = time.time()
             print('oldTime',oldTime)
+            Camera.threadStatus='start'
             while True:
                 imgReq = requests.get(url)
                 imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)
@@ -141,6 +152,9 @@ class Camera(BaseCamera):
                     cam.count=count
                     db.session.commit()
                     oldTime = time.time()
+
+                if Camera.threadStatus=='stop':
+                    break
 
         except:
             cv2.destroyAllWindows()

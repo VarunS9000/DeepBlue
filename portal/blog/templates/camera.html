@@ -124,7 +124,7 @@
 </style>
 <body>
     <h1 id="titleType">Camera View</h1>
-    <center id="dis" style=" display: inline-block; "><img id="img" class="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i title="stop the feed" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
+    <img id="img" class="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i title="stop the feed" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}-->
     <canvas id="canvas" width="300" height="300"></canvas>
     <script type="text/javascript">
 
@@ -140,7 +140,7 @@
           k.src = ''
           $.ajax({
             url: "{{url_for('killCam')}}",
-            type: 'GET',
+            type: 'POST',
             success: function(data) {
               alert('success')
               //console.log(data);
@@ -154,7 +154,7 @@
           document.getElementsByClassName('fas')[0].title = 'start feed again'
         }
         else {
-          document.getElementById('img').src = `{{url_for('video_feed',ipAdd=ipAdd,port=port)}}`
+          document.getElementById('img').src = "{{url_for('video_feed',ipAdd=ipAdd,port=port)}}";
           document.getElementsByClassName('fas')[0].style.color = 'red';
           document.getElementsByClassName('fas')[0].title = 'Stop the feed'
           srcClick = false
@@ -162,18 +162,13 @@
       })
 
       document.getElementById('titleType').innerHTML += ': -' +  `<a style="color: white" href=http://` + window.location.toString().split('?')[1].split('=')[1].split('&')[0] + ':' + window.location.toString().split('?')[1].split('=')[3] + `> click to goto cam IP</a>`
-      if(document.getElementById('img').src == '') {
-        $body.addClass("loading")
-      }
-
-      if(document.getElementById('img').src != '')  {
-        $body.removeClass("loading")
-      }
+      
       var coords = []
-      var img = document.getElementById('img');
+      var img = document.getElementById("img");
       clicked = false
       img.addEventListener('click',(event)=>{
         clicked = true
+        alert('clicked');
         coords.push(event.clientX);
         coords.push(event.clientY);
         console.log('coords: ',coords);
