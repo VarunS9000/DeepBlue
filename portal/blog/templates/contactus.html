@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="Contact us" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Contact us</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <style media="screen">
+
+      body {
+        background: linear-gradient(to right,#333ccc,#000000);
+        color: white;
+        padding: 1em;
+        margin: 1em;
+        font-family: Garamond, serif;
+        font-size: 1.05em;
+      }
+      .imgStyle {
+        width: 18em;
+        height: 18em;
+        margin: 1em;
+        margin-top: 5em;
+        border: 0.3em inset white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <center>
+        OUR DEVELOPERS.. <br>
+        <div class="" style=" float: left">
+
+
+          <img class="imgStyle" id="varun" src="" alt="">
+          <p style=" margin: 1em" >Varun Sreedhar <br> contact number: +91 0000000000 <br> email: varun.sreedhar18@siesgst.ac.in </p>
+        </div>
+        <div class="" style=" float: left">
+
+
+          <img class="imgStyle" id="anand" src="" alt="">
+          <p style=" margin: 1em" >Anandteertha Rao <br> contact number: +91 0000000000 <br> email: raoanandteertha@gmail.com  </p>
+        </div>
+
+        <div class="" style=" float: left">
+
+
+          <img class="imgStyle" id="sanjana" src="" alt="">
+          <p style=" margin: 1em" >Sanjana Kumar <br> contact number: +91 0000000000 <br> email: kumar.sanjana1807@gmail.com </p>
+        </div>
+
+        <div class="" style=" float: left">
+
+
+          <img class="imgStyle" id="sri" src="" alt="">
+          <p style=" margin: 1em" >Srikrishna Veturi <br> contact number: +91 0000000000 <br> email: srikrishna.veturi18@siesgst.ac.in </p>
+        </div>
+
+      </center>
+      <script type="text/javascript">
+        $.ajax({
+          url: '/pics',
+          type: 'post',
+          success: function(data) {
+            var data = data.split(',')
+            document.getElementById('anand').src = 'data:image/png;base64,' + data[0].toString().substring(4).slice(0, -2);
+            document.getElementById('sri').src = 'data:image/png;base64,' + data[1].toString().substring(4).slice(0, -2);
+            document.getElementById('sanjana').src = 'data:image/png;base64,' + data[2].toString().substring(4).slice(0, -2);
+            document.getElementById('varun').src = 'data:image/png;base64,' + data[3].toString().substring(4).slice(0, -3);
+            console.log(data);
+            //alert(document.getElementById('anand').src)
+            console.log(data[2])
+          }
+        })
+      </script>
+    </div>
+  </body>
+</html>

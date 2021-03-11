@@ -40,7 +40,7 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames(ip,port):
-        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
+        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/6.h5')
         print('Frame Cam',ip)
         print('Frame Port',port)
         if(port is not None):
@@ -49,8 +49,8 @@ class Camera(BaseCamera):
         else:
             port=Camera.back_port
 
-        
-        
+
+
         url = 'http://'+ip+':'+port+'/shot.jpg'
         url = str(url)
         #print('rect: ',rect)
@@ -78,7 +78,7 @@ class Camera(BaseCamera):
             colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
             oldTime = time.time()
             print('oldTime',oldTime)
-            
+
             while True:
                 imgReq = requests.get(url)
                 imgArr = np.array(bytearray(imgReq.content),dtype = np.uint8)

@@ -18,6 +18,7 @@ from blog.base_camera import BaseCamera
 from flask import send_file
 import time
 import base64
+import json
 
 @socketio.on('coords')
 def handle_json(json):
@@ -37,22 +38,52 @@ def killCam():
         Camera.threadStatus='stop'
         BaseCamera.thread.join()
         #return the svg file!!
-        
 
-        with open("C:\DeepBlue\portal\icon.png", "rb") as image_file:
+
+        with open("D:/DeepBlue/portal/icon.PNG", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
             return str(encoded_string)
 @app.route('/icon',methods=['GET'])
 def icon():
 
 
-    with open("icon.png", "rb") as image_file:
+    with open("D:/DeepBlue/portal/icon.PNG", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
         return str(encoded_string)
 
 @app.route('/videoDemo',methods=['GET'])
 def videDemo():
     return render_template('videos.html')
+
+
+@app.route('/aboutus',methods=['GET'])
+def aboutus():
+    return render_template('aboutus.html')
+
+@app.route('/contactus',methods=['GET'])
+def contactus():
+    return render_template('contactus.html')
+
+@app.route('/pics',methods=['POST'])
+def pics():
+    everyonePics = []
+    with open("D:/DeepBlue/portal/anand.PNG", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+        anand = str(encoded_string)
+    with open("D:/DeepBlue/portal/sri.PNG", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+        sri = str(encoded_string)
+    with open("D:/DeepBlue/portal/newsanjana.PNG", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+        sanjana = str(encoded_string)
+    with open("D:/DeepBlue/portal/varun.PNG", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+        varun = str(encoded_string)
+    everyonePics.append(anand)
+    everyonePics.append(sri)
+    everyonePics.append(sanjana)
+    everyonePics.append(varun)
+    return json.dumps(everyonePics)
 
 
 @app.route("/loadTfnet",methods=['GET'])

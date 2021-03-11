@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
-    <title>Document</title>
+    <title>Camera Feed</title>
 </head>
 <style media="screen">
   #img {
@@ -124,7 +124,7 @@
 </style>
 <body>
     <h1 id="titleType">Camera View</h1>
-    <center id="dis" style=" display: inline-block; "><img id="img" class="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i title="stop the feed" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
+    <center id="dis" style=" display: inline-block; "><img id="img" class="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i aria-hidden='false' title="stop the feed" id="iconCan" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
     <canvas id="canvas" width="300" height="300"></canvas>
     <script type="text/javascript">
 
@@ -142,27 +142,38 @@
             url: "{{url_for('killCam')}}",
             type: 'POST',
             success: function(data) {
-              alert('success')
+              //alert('success')
               //console.log(data);
               var ii = document.getElementById('img');
-              ii.src = 'data:image/png;base64,' + data.toString()
+              var xM = 'data:image/png;base64,' + data.toString().substring(2).slice(0, -1);
+              ii.src = xM;
+              //console.log(xM);
+              //alert(document.getElementById('img').src)
             }
 
           })
           srcClick = true;
           document.getElementsByClassName('fas')[0].style.color = 'green';
-          document.getElementsByClassName('fas')[0].title = 'start feed again'
+          document.getElementsByClassName('fas')[0].title = 'start feed again';
+          //document.getElementById('iconCan').classList.remove('fas');
+          document.getElementById('iconCan').classList.remove('fa-window-close');
+          document.getElementById('iconCan').classList.add('fa');
+          document.getElementById('iconCan').classList.add('fa-check-circle');
         }
         else {
           document.getElementById('img').src = "{{url_for('video_feed',ipAdd=ipAdd,port=port)}}";
           document.getElementsByClassName('fas')[0].style.color = 'red';
           document.getElementsByClassName('fas')[0].title = 'Stop the feed'
+          //document.getElementById('iconCan').classList.add('fas');
+          document.getElementById('iconCan').classList.add('fa-window-close');
+          document.getElementById('iconCan').classList.remove('fa');
+          document.getElementById('iconCan').classList.remove('fa-check');
           srcClick = false
         }
       })
 
       document.getElementById('titleType').innerHTML += ': -' +  `<a style="color: white" href=http://` + window.location.toString().split('?')[1].split('=')[1].split('&')[0] + ':' + window.location.toString().split('?')[1].split('=')[3] + `> click to goto cam IP</a>`
-      
+
       var coords = []
       var img = document.getElementById("img");
       clicked = false
