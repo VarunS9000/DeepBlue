@@ -150,6 +150,8 @@ class Camera(BaseCamera):
 
                 if time.time()-oldTime >= 10:
                     cam.count=count
+                    history=HistoryDB(region=cam.region,count=count)
+                    db.session.add(history)
                     db.session.commit()
                     oldTime = time.time()
 
