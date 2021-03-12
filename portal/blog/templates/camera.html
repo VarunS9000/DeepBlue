@@ -185,7 +185,7 @@
         if(coords.length == 4) {
           var src = document.getElementById('img').src
           document.getElementById('img').src = ''
-          alert('coords'+coords)
+          //alert('coords'+coords)
           console.log('before ajax..');
 
           $.ajax({
@@ -200,7 +200,7 @@
               region:'{{region}}'
             },
             success: function() {
-              alert('success');
+              //alert('success');
               coords = []
               console.log('after ajax');
 
@@ -229,14 +229,14 @@
               ctx.strokeStyle = "red";
               x = Number(coords[0]) - 8
               y = Number(coords[1]) - 263
-              alert('x: '+x+'y: '+y)
+              //alert('x: '+x+'y: '+y)
               ctx.rect(x,y,width,height);
               ctx.stroke();
               document.body.appendChild(canvas)
             }
           });
           $(document).ajaxStop(function() {
-            alert('done')
+            //alert('done')
             document.getElementById('img').src = src
           });
         }
@@ -258,7 +258,7 @@
       })
 
       if(coords.length == 2) {
-        alert('inside here')
+        //alert('inside here')
         $('img').mousemove(function(e) {
           console.log('hahahah');
           document.getElementById('coords').innerHTML = 'x = '+e.clientX + '<br>' +'y = '+e.clientY;
