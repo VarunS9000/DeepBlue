@@ -2,7 +2,7 @@ import os
 import cv2
 from blog import db
 from blog.base_camera import BaseCamera
-from blog.models import CameraDb
+from blog.models import CameraDb,HistoryDB
 import numpy as np
 import requests
 from flask import url_for,redirect,session
