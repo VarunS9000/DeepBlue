@@ -19,6 +19,9 @@ from flask import send_file
 import time
 import base64
 import json
+from blog.models import HistoryDB
+
+
 
 @socketio.on('coords')
 def handle_json(json):
@@ -51,6 +54,22 @@ def icon():
         encoded_string = base64.b64encode(image_file.read())
         return str(encoded_string)
 
+@app.route('/getHistoricalData',methods=['POST'])
+def getHistoricalData():
+
+    history = HistoryDB.query.all()
+    print(history)
+    returnList = []
+    for h in history:
+        i = {}
+        i['region'] = h.region
+        i['count'] = h.count
+        i['date'] = str(h.date_posted)
+        returnList.append(i)
+    print(returnList)
+    return json.dumps(returnList)
+
+
 @app.route('/analysis',methods=['GET'])
 def analysis():
     return render_template('analysis.html')
@@ -64,7 +83,7 @@ def getAnalysisData():
         i['ip'] = item.ip
         i['port'] = item.port
         i['count'] = item.count
-        i['region'] = item.region        
+        i['region'] = item.region
         print(i)
         returnList.append(i)
     return json.dumps(returnList)

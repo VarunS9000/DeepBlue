@@ -5,6 +5,7 @@
     <title>Analysis</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
   </head>
   <style media="screen">
     body {
@@ -16,7 +17,6 @@
     }
   </style>
   <body>
-
 
     <div id="container" style="width: 100%; height: 100%  margin: 2em; padding: 2em"></div>
 
@@ -62,11 +62,122 @@
         }
       })
 
-      anychart.onDocumentReady(function() {
 
-        console.log('hi');
-    });
+      const distinct = (value,index,self) => {
+        return self.indexOf(value) === index
+      }
+
+
+
+
+
+      $.ajax({
+        url: '/getHistoricalData',
+        type: 'post',
+        success: function(data) {
+          var data = JSON.parse(data)
+          console.log(data);
+          let i = 0;
+          let row = []
+
+          let regions = []
+          for(i=0;i<data.length;i++) {
+            regions.push(data[i].region)
+          }
+          let distinctRegions = regions.filter(distinct)
+          console.log('distinctRegions: ',distinctRegions);
+          i = 0
+          for(i=0;i<distinctRegions.length;i++) {
+            var j = 0;
+            var rowNew = []
+            for(j=0;j<data.length;j++) {
+              console.log('in loop');
+              if(distinctRegions[i] == data[j].region) {
+                let item = {};
+                var date = new Date(data[j].date)
+                console.log(date);
+                item['x'] = date;
+                item['y'] = data[j].count
+                rowNew.push(item)
+              }
+            }
+            historyAnalysis(distinctRegions[i],rowNew)
+          }
+          /*
+          for(i=0;i<data.length;i++) {
+            let item = {}
+            //item.push(data[i].time)
+            //item.push(data[i].count)
+            //row.push(item)
+            var date = new Date(data[i].date)
+            console.log(date);
+            item['x'] = date;
+            item['y'] = data[i].count
+            row.push(item)
+          }
+          historyAnalysis(data[i].region,row)
+          data = {
+            header: ["time", "count"],
+            rows:  row
+            [//array
+            { x: new Date(2012, 01, 1), y: 26},
+            { x: new Date(2012, 01, 3), y: 38},
+            { x: new Date(2012, 01, 5), y: 43},
+            { x: new Date(2012, 01, 7), y: 29},
+            { x: new Date(2012, 01, 11), y: 41},
+            { x: new Date(2012, 01, 13), y: 54},
+            { x: new Date(2012, 01, 20), y: 66},
+            { x: new Date(2012, 01, 21), y: 60},
+            { x: new Date(2012, 01, 25), y: 53},
+            { x: new Date(2012, 01, 27), y: 60}
+
+            ]
+
+          };*/
+
+        }
+      })
+
+
 
     </script>
+    <script type="text/javascript">
+      function historyAnalysis(region,dataArray) {
+
+          console.log('in func');
+          console.log(dataArray);
+          var history = document.getElementById('history');
+          var regionDiv = document.createElement('div')
+          regionDiv.setAttribute('id',region)
+          regionDiv.style.height = '300px'
+          regionDiv.style.width = '50%';
+          history.appendChild(regionDiv)
+          console.log(document.getElementById(region));
+          var chart = new CanvasJS.Chart(region,
+          {
+            title:{
+              text: region
+          },
+          axisX:{
+              title: "timeline",
+              gridThickness: 2
+          },
+          axisY: {
+              title: "count"
+          },
+          data: [
+          {
+              type: "area",
+              dataPoints: dataArray
+          }
+          ]
+      });
+
+          chart.render();
+      }
+      </script>
+    <div class="history" id="history" style="width: 100%; height: 100%  margin: 2em; padding: 2em" >
+      <!--<div id="chartContainer" style="height: 300px; width: 100%;"></div>-->
+    </div>
   </body>
 </html>

@@ -86,6 +86,8 @@ def countPeople(ip,port):
 
             cam=CameraDb.query.filter(CameraDb.ip==ip and CameraDb.port==port).one()
             cam.count=count
+            history=HistoryDB(region=cam.region,count=count)
+            db.session.add(history)
             db.session.commit()
             cap.release()
 
