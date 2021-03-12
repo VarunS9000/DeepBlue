@@ -21,7 +21,7 @@ class CameraDb(db.Model,UserMixin):
 
 class HistoryDB(db.Model):
     id=db.Column(db.Integer,primary_key=True)
-    region=db.Column(db.String(20),db.ForeignKey(CameraDB.region),nullable=False)
+    region=db.Column(db.String(20),nullable=False)
     count=db.Column(db.Integer,nullable=False,default=0)
     date_posted=db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
 
