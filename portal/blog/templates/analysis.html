@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Analysis</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+  </head>
+  <style media="screen">
+    body {
+      background: linear-gradient(to right,#333ccc,#000000);
+      color: white;
+      padding: 5em;
+      margin: 2em;
+      font-family: Garamond, serif;
+    }
+  </style>
+  <body>
+
+
+    <div id="container" style="width: 100%; height: 100%  margin: 2em; padding: 2em"></div>
+
+
+
+    <script type="text/javascript">
+
+      var ajaxData = ''
+
+      $.ajax({
+        url:'/getAnalysisData',
+        type: 'post',
+        success: function(data) {
+          console.log(data);
+          var data = JSON.parse(data)
+          let i = 0;
+          let row = []
+          for(i=0;i<data.length;i++) {
+            let item = []
+            item.push(data[i].region)
+            item.push(data[i].count)
+            row.push(item)
+          }
+
+          data = {
+            header: ["region", "count"],
+            rows:  row
+          };
+          console.log('data: ',data);
+          var chart = anychart.bar();
+
+          // add the data
+          //chart.xScale(anychart.scales.linear());
+          //chart.yScale().ticks().allowFractional(false);
+          //chart.xScale().allowFractional(false);
+          chart.data(data);
+          var newScale = anychart.scales.ordinal();
+          chart.xScale(newScale);
+          //chart.xScale(anychart.scales.linear());
+          chart.title("Crowd counting - regionwise count");
+          chart.container('container');
+          chart.draw();
+        }
+      })
+
+      anychart.onDocumentReady(function() {
+
+        console.log('hi');
+    });
+
+    </script>
+  </body>
+</html>

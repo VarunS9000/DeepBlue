@@ -51,6 +51,24 @@ def icon():
         encoded_string = base64.b64encode(image_file.read())
         return str(encoded_string)
 
+@app.route('/analysis',methods=['GET'])
+def analysis():
+    return render_template('analysis.html')
+
+@app.route('/getAnalysisData',methods=['POST'])
+def getAnalysisData():
+    camera = CameraDb.query.all()
+    returnList = []
+    for item in camera:
+        i = {}
+        i['ip'] = item.ip
+        i['port'] = item.port
+        i['count'] = item.count
+        i['region'] = item.region        
+        print(i)
+        returnList.append(i)
+    return json.dumps(returnList)
+
 @app.route('/videoDemo',methods=['GET'])
 def videDemo():
     return render_template('videos.html')
