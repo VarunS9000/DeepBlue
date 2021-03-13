@@ -21,7 +21,7 @@
       box-sizing: border-box;
       float: left;
       text-align: center;
-      
+
       border: 1em inset;
       text-align: center;
     }
@@ -36,7 +36,7 @@
       float: left;
       color: black;
       text-align: center;
-      
+
       border: 1em inset;
 
     }
@@ -58,8 +58,9 @@
     <div class="box-to-select">
       <h2> <b>Select the video</b> </h2>
       <ul>
-        <u><li title="demo 1" id="link1">Demo video 1 </li> <br></u>
+        <u><li title="demo of model " id="link1">Demo video 1 </li> <br></u>
         <u><li title="demo 2" id="link2">Demo video 2 </li> <br></u>
+        <u><li title="Intersection" id="link3">Intersection</li></u>
       </ul>
     </div>
     <div class="video-box">
@@ -77,6 +78,11 @@
         document.getElementsByClassName('video-box')[0].innerHTML = ''
         //await new Promise(r => setTimeout(r, 500));
         document.getElementsByClassName('video-box')[0].innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/OJPj-QCUxhw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+      })
+
+      document.getElementById('link3').addEventListener('click',(e)=> {
+        document.getElementsByClassName('video-box')[0].innerHTML = ''
+        document.getElementsByClassName('video-box')[0].innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/4TXdBIvha9s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
       })
     </script>
   </body>
