@@ -105,7 +105,7 @@ class BaseCamera(object):
             print('diff = ',time.time() - BaseCamera.last_access)
             print('BaseCamera.last_access: ',BaseCamera.last_access)
 
-            if time.time() - BaseCamera.last_access > 40:
+            if time.time() - BaseCamera.last_access > 15:
                 frames_iterator.close()
                 print('Stopping camera thread due to inactivity.')
                 break

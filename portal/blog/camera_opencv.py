@@ -40,7 +40,7 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames(ip,port):
-        model = tensorflow.keras.models.load_model('D:/DeepBlue/portal/6.h5')
+        model = tensorflow.keras.models.load_model('C:/DeepBlue/portal/6.h5')
         print('Frame Cam',ip)
         print('Frame Port',port)
         if(port is not None):
