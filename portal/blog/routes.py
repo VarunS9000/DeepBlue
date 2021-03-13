@@ -44,14 +44,14 @@ def killCam():
         #return the svg file!!
 
 
-        with open("C:/DeepBlue/portal/icon.PNG", "rb") as image_file:
+        with open("D:/DeepBlue/portal/icon.PNG", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
             return str(encoded_string)
 @app.route('/icon',methods=['GET'])
 def icon():
 
 
-    with open("C:/DeepBlue/portal/icon.PNG", "rb") as image_file:
+    with open("D:/DeepBlue/portal/icon.PNG", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
         return str(encoded_string)
 
@@ -105,16 +105,16 @@ def contactus():
 @app.route('/pics',methods=['POST'])
 def pics():
     everyonePics = []
-    with open("C:/DeepBlue/portal/anand.PNG", "rb") as image_file:
+    with open("D:/DeepBlue/portal/anand.PNG", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
         anand = str(encoded_string)
-    with open("C:/DeepBlue/portal/sri.PNG", "rb") as image_file:
+    with open("D:/DeepBlue/portal/sri.PNG", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
         sri = str(encoded_string)
-    with open("C:/DeepBlue/portal/newsanjana.PNG", "rb") as image_file:
+    with open("D:/DeepBlue/portal/newsanjana.PNG", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
         sanjana = str(encoded_string)
-    with open("C:/DeepBlue/portal/varun.PNG", "rb") as image_file:
+    with open("D:/DeepBlue/portal/varun.PNG", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
         varun = str(encoded_string)
     everyonePics.append(anand)
