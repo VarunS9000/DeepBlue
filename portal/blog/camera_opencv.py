@@ -96,7 +96,7 @@ class Camera(BaseCamera):
                 if rect != [0,0,0,0]:
                     #print('inside rect !=')
                     frame = frame[rect[0]:rect[2],rect[1]:rect[3]]
-
+                    cv2.imshow('hiiii',frame)
                 #print('frame: ',frame)
                 print('Before frame')
                 results = Loading.tfnet.return_predict(frame)
@@ -157,6 +157,8 @@ class Camera(BaseCamera):
 
                 if Camera.threadStatus=='stop':
                     break
+                else:
+                    print('threadStatus is not stop')                    
 
         except:
             cv2.destroyAllWindows()

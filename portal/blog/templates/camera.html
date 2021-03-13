@@ -126,9 +126,12 @@
     <h1 id="titleType">Camera View</h1>
     <center id="dis" style=" display: inline-block; "><img id="img" class="img" style=" float: left" src="{{url_for('video_feed',ipAdd=ipAdd,port=port)}}"><i aria-hidden='false' title="stop the feed" id="iconCan" style=" float: left" class="fas fa-window-close fa-4x"></i><!--{{url_for('video_feed',ipAdd=ipAdd,port=port)}}--></center>
     <canvas id="canvas" width="300" height="300"></canvas>
+    <br><span id="cords"></span>
     <script type="text/javascript">
 
+    document.body.addEventListener('onmousemove',(e)=> {
 
+    })
 
       document.getElementsByClassName('fas')[0].style.color = 'red';
       var closeSRC = document.getElementsByClassName('fas')[0];
@@ -145,6 +148,7 @@
             success: function(data) {
               //alert('success')
               //console.log(data);
+              var data = data;
               var ii = document.getElementById('img');
               var xM = 'data:image/png;base64,' + data.toString().substring(2).slice(0, -1);
               ii.src = xM;
@@ -155,8 +159,8 @@
           })
           srcClick = true;
           console.log(srcClick);
-          console.log(document.getElementById('img').src)
 
+          console.log(document.getElementById('img').src)
           document.getElementsByClassName('fas')[0].style.color = 'green';
           document.getElementsByClassName('fas')[0].title = 'start feed again';
           //document.getElementById('iconCan').classList.remove('fas');
@@ -188,10 +192,16 @@
       clicked = false
       img.addEventListener('click',(event)=>{
         clicked = true
-        coords.push(event.clientX);
-        coords.push(event.clientY);
+        var x = event.clientX - 407;
+        var y = event.clientY - 110;
+        coords.push(x);
+        coords.push(y);
         console.log('coords: ',coords);
+        if(coords.length == 2) {
+          alert('first click done coords are: '+coords)
+        }
         if(coords.length == 4) {
+          alert('second click done the coords are: '+coords)
           var src = document.getElementById('img').src
           document.getElementById('img').src = ''
           //alert('coords'+coords)
@@ -208,12 +218,12 @@
               ip: '{{ipAdd}}',
               region:'{{region}}'
             },
-            success: function() {
+            success: function(data) {
               //alert('success');
               coords = []
               console.log('after ajax');
-
-
+              
+              document.getElementById('img').src = src
               var img = document.getElementById('img')
               var canvas = document.getElementById('canvas')
               canvas.setAttribute('id','canvas')
@@ -246,7 +256,7 @@
           });
           $(document).ajaxStop(function() {
             //alert('done')
-            document.getElementById('img').src = src
+
           });
         }
       });
@@ -254,15 +264,15 @@
       var x = 0;
       var y = 0;
 
-      $('img').mousemove(function(e) {
-        console.log('hahahah');
+      $('body').mousemove(function(e) {
+        //console.log('hahahah');
 
-        x = e.clientX;
-        y = e.clientY;
+        document.getElementById('cords').innerHTML = 'x: '+e.clientX+' y: '+e.clientY;
+
       })
 
       $('canvas').mousemove(function(e) {
-        console.log('hahahah');
+        //console.log('hahahah');
 
       })
 
