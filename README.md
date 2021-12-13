@@ -25,3 +25,7 @@ number of individuals in each frame using an object detection algorithm.
 
 [![Slicing](https://img.youtube.com/vi/4TXdBIvha9s/0.jpg)](https://www.youtube.com/watch?v=4TXdBIvha9s)
 
+### Demo video (Watch this for a comprehensive view of the project)
+
+[![Crowd Counting Challenge Demo Video]](https://drive.google.com/file/d/1N7TmKLkFg5s_VnDeb8tqc2wOVW-OqDab/view?usp=sharing)
+
