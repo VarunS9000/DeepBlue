@@ -27,5 +27,5 @@ number of individuals in each frame using an object detection algorithm.
 
 ### Demo video (Watch this for a comprehensive view of the project)
 
-[![Crowd Counting Challenge Demo Video]](https://drive.google.com/file/d/1N7TmKLkFg5s_VnDeb8tqc2wOVW-OqDab/view?usp=sharing)
+[Crowd Counting Challenge Demo Video](https://drive.google.com/file/d/1N7TmKLkFg5s_VnDeb8tqc2wOVW-OqDab/view?usp=sharing)
 
