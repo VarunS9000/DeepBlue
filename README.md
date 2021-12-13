@@ -15,5 +15,5 @@ number of individuals in each frame using an object detection algorithm.
 <img src="https://user-images.githubusercontent.com/62417466/145753653-bcb856ff-5f8e-49b5-88d5-b391f8546135.jpg" width="900" height="500">
 
 ### Count analyisis
-<img src="https://user-images.githubusercontent.com/62417466/145753814-89b861e4-229f-4908-8f89-8ccdbee6c8bc.jpg" width="900" height="500">
+<img src="https://user-images.githubusercontent.com/62417466/145753926-bc9bb1c0-aa2c-411a-a78d-4ca7e787704d.jpg" width="900" height="500">
 
