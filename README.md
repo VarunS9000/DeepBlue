@@ -17,7 +17,11 @@ number of individuals in each frame using an object detection algorithm.
 ### Count analyisis
 <img src="https://user-images.githubusercontent.com/62417466/145753926-bc9bb1c0-aa2c-411a-a78d-4ca7e787704d.jpg" width="900" height="500">
 
-### Crowd counting videos
+### Crowd counting video
 
 [![Crowd Counting](https://img.youtube.com/vi/IH4JOMyH_VQ/0.jpg)](https://www.youtube.com/watch?v=IH4JOMyH_VQ)
+
+### Counting and frame slicing
+
+[![Slicing](https://img.youtube.com/vi/4TXdBIvha9s/0.jpg)](https://www.youtube.com/watch?v=4TXdBIvha9s)
 
